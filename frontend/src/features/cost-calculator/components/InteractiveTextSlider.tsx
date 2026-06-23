@@ -39,7 +39,7 @@ export const InteractiveTextSlider: React.FC<InteractiveTextSliderProps> = ({
         ></textarea>
       </div>
 
-      <div className="pt-4 border-t border-slate-100 space-y-6">
+      <div className="pt-4 border-t border-slate-100 dark:border-slate-700/50 space-y-6">
         <Slider
           label="Input Tokens (Prompt)"
           min={1} max={128000} step={100}

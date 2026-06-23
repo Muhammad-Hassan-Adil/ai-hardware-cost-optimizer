@@ -110,7 +110,7 @@ const AppContent: React.FC = () => {
                 />
                 <ProviderFilter providerFilter={providerFilter} setProviderFilter={setProviderFilter} />
               </div>
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 min-w-0">
                 <PricingTable 
                   models={models} setModels={setModels}
                   loading={loading} setLoading={setLoading}
