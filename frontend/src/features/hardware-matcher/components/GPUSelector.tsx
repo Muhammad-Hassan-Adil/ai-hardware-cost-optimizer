@@ -11,7 +11,7 @@ interface GPUSelectorProps {
 export const GPUSelector: React.FC<GPUSelectorProps> = ({ request, updateRequest }) => {
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold text-slate-800 mb-4">Hardware Specifications</h3>
+      <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Hardware Specifications</h3>
       
       <div className="space-y-6">
         <Slider

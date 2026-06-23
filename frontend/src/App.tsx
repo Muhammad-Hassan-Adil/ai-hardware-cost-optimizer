@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { SEOWrapper } from './components/seo/SEOWrapper';
-import { Tabs } from './components/common/Tabs';
+import { Moon, Sun } from 'lucide-react';
 
 // Tab 1 Components
 import { useHardwareMatcher } from './features/hardware-matcher/hooks/useHardwareMatcher';
@@ -18,6 +18,16 @@ import { ProviderFilter } from './features/cost-calculator/components/ProviderFi
 
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [isDark, setIsDark] = useState(true);
+
+  // Apply dark class to html element
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
 
   // Tab 1 State
   const { request: hwRequest, updateRequest: updateHwRequest, result: hwResult } = useHardwareMatcher();
@@ -31,24 +41,51 @@ const AppContent: React.FC = () => {
   } = useCostCalculator();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto p-6 space-y-8">
+        <header className="py-8 text-center relative max-w-4xl mx-auto px-4">
+          <button
+            onClick={() => setIsDark(!isDark)}
+            className="absolute right-4 top-8 p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+            aria-label="Toggle Dark Mode"
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             AI Hardware & Cost Optimizer Hub
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mt-4">
             Accurately estimate local LLM hardware requirements or compare cloud API costs dynamically.
           </p>
         </header>
 
         <div className="flex justify-center">
-          <div className="w-full max-w-md">
-            <Tabs 
-              tabs={['Local Hardware Matcher', 'Cloud API Cost Calculator']} 
-              activeTab={activeTab} 
-              onChange={setActiveTab} 
-            />
+          <div className="w-full max-w-md bg-slate-200 dark:bg-slate-800/50 p-1 rounded-lg backdrop-blur-sm border border-slate-300 dark:border-slate-700/50">
+            <div className="flex gap-1">
+              <Link
+                to="/"
+                onClick={() => setActiveTab(0)}
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-center ${
+                  activeTab === 0
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                Local Hardware Matcher
+              </Link>
+              <Link
+                to="/cloud-costs"
+                onClick={() => setActiveTab(1)}
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 text-center ${
+                  activeTab === 1
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                Cloud API Cost Calculator
+              </Link>
+            </div>
           </div>
         </div>
 

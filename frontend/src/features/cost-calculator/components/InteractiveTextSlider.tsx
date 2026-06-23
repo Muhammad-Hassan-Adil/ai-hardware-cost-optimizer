@@ -26,15 +26,15 @@ export const InteractiveTextSlider: React.FC<InteractiveTextSliderProps> = ({
 
   return (
     <Card className="p-6 space-y-6">
-      <h3 className="text-lg font-semibold text-slate-800">Token Estimation</h3>
+      <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Token Estimation</h3>
       
       <div>
-        <label className="block mb-2 text-sm font-medium text-slate-700">Paste your prompt to estimate tokens:</label>
+        <label className="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Paste your prompt to estimate tokens:</label>
         <textarea
           rows={4}
           value={text}
           onChange={handleTextChange}
-          className="block p-2.5 w-full text-sm text-slate-900 bg-slate-50 rounded-lg border border-slate-300 focus:ring-blue-500 focus:border-blue-500"
+          className="block p-2.5 w-full text-sm text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-300 dark:border-slate-600 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Paste some text here..."
         ></textarea>
       </div>
