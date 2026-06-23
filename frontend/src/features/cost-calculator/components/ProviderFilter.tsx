@@ -24,7 +24,7 @@ export const ProviderFilter: React.FC<ProviderFilterProps> = ({ providerFilter, 
   }, []);
 
   return (
-    <div className="w-64">
+    <div className="w-full">
       <Dropdown
         options={providers}
         value={providerFilter}

@@ -61,10 +61,10 @@ export const PricingTable: React.FC<PricingTableProps> = ({
         <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
           <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
             <tr>
-              <th scope="col" className="px-6 py-3">Model</th>
-              <th scope="col" className="px-6 py-3">Provider</th>
-              <th scope="col" className="px-6 py-3 text-right">Context</th>
-              <th scope="col" className="px-6 py-3 text-right">Cost per Request</th>
+              <th scope="col" className="px-6 py-3 whitespace-nowrap">Model</th>
+              <th scope="col" className="px-6 py-3 whitespace-nowrap">Provider</th>
+              <th scope="col" className="px-6 py-3 text-right whitespace-nowrap">Context</th>
+              <th scope="col" className="px-6 py-3 text-right whitespace-nowrap">Cost per Request</th>
             </tr>
           </thead>
           <tbody>
@@ -83,13 +83,13 @@ export const PricingTable: React.FC<PricingTableProps> = ({
                     <td className="px-6 py-4 font-medium text-slate-900 dark:text-white whitespace-nowrap">
                       {model.friendly_name}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {(model as any).cloud_providers?.name || 'Unknown'}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       {model.context_length.toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 text-right font-semibold text-blue-600 dark:text-blue-400">
+                    <td className="px-6 py-4 text-right font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
                       ${totalCost < 0.0001 ? '<$0.0001' : totalCost.toFixed(4)}
                     </td>
                   </tr>

@@ -14,9 +14,9 @@ export const Slider: React.FC<SliderProps> = ({ min, max, step = 1, value, onCha
   return (
     <div className="flex flex-col w-full space-y-2">
       {label && (
-        <div className="flex justify-between items-center text-sm font-medium text-slate-700">
+        <div className="flex justify-between items-center text-sm font-medium text-slate-700 dark:text-slate-300">
           <span>{label}</span>
-          <span className="text-blue-600 bg-blue-50 px-2 py-1 rounded-md">{value}{suffix}</span>
+          <span className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md">{value}{suffix}</span>
         </div>
       )}
       <input
@@ -26,7 +26,7 @@ export const Slider: React.FC<SliderProps> = ({ min, max, step = 1, value, onCha
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer accent-blue-600"
+        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
       />
     </div>
   );
