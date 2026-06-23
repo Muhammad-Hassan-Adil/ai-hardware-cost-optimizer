@@ -37,6 +37,11 @@ export const InteractiveTextSlider: React.FC<InteractiveTextSliderProps> = ({
           className="block p-2.5 w-full text-sm text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-300 dark:border-slate-600 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Paste some text here..."
         ></textarea>
+        {promptTokens > 0 && (
+          <p className="mt-2 text-xs text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+            ⚡ Estimated {promptTokens} tokens. Check the table on the right to see the exact cost across all models!
+          </p>
+        )}
       </div>
 
       <div className="pt-4 border-t border-slate-100 dark:border-slate-700/50 space-y-6">

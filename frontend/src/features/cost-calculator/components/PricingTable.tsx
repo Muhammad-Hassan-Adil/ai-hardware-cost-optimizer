@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../services/supabaseClient';
+import { Search } from 'lucide-react';
 import type { CloudModel } from '../../../types/database.types';
 import { Card } from '../../../components/common/Card';
 
@@ -16,6 +17,8 @@ interface PricingTableProps {
 export const PricingTable: React.FC<PricingTableProps> = ({
   models, setModels, loading, setLoading, promptTokens, completionTokens, providerFilter
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     const fetchModels = async () => {
       setLoading(true);
@@ -34,14 +37,27 @@ export const PricingTable: React.FC<PricingTableProps> = ({
   }, [setModels, setLoading]);
 
   const filteredModels = models.filter(m => {
-    if (providerFilter === 'all') return true;
-    const providerSlug = (m as any).cloud_providers?.slug;
-    return providerSlug === providerFilter;
+    const matchesProvider = providerFilter === 'all' || (m as any).cloud_providers?.slug === providerFilter;
+    const matchesSearch = m.friendly_name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesProvider && matchesSearch;
   });
 
   return (
-    <Card className="overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="space-y-4">
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-slate-400" />
+        </div>
+        <input
+          type="text"
+          placeholder="Search models (e.g., GPT-4, Claude)..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg leading-5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+        />
+      </div>
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
           <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
             <tr>
@@ -83,6 +99,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({
           </tbody>
         </table>
       </div>
-    </Card>
+      </Card>
+    </div>
   );
 };
