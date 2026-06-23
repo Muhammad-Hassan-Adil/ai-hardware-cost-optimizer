@@ -1,6 +1,7 @@
 import { GPU, LocalModel, HardwareMatchRequest, HardwareMatchResponse, CloudModel } from '../types/database.types';
 
-const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
+// We use the Vite environment variable if available, otherwise fallback to the live Render backend
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ai-hardware-cost-optimizer.onrender.com/api/v1';
 
 export const api = {
   async getGPUs(): Promise<GPU[]> {
