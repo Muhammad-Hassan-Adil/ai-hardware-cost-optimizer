@@ -1,4 +1,4 @@
-import { GPU, LocalModel, HardwareMatchRequest, HardwareMatchResponse, CloudModel } from '../types/database.types';
+import type { GPU, LocalModel, HardwareMatchRequest, HardwareMatchResponse } from '../types/database.types';
 
 // We use the Vite environment variable if available, otherwise fallback to the live Render backend
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ai-hardware-cost-optimizer.onrender.com/api/v1';

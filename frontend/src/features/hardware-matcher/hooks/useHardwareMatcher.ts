@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { HardwareMatchRequest, HardwareMatchResult, calculateHardwareMatch } from '../utils/memoryMath';
+import type { HardwareMatchRequest, HardwareMatchResult } from '../utils/memoryMath';
+import { calculateHardwareMatch } from '../utils/memoryMath';
 
 export const useHardwareMatcher = () => {
   const [request, setRequest] = useState<HardwareMatchRequest>({

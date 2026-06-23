@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SEOWrapper } from './components/seo/SEOWrapper';
 import { Tabs } from './components/common/Tabs';
 
+// Tab 1 Components
 import { useHardwareMatcher } from './features/hardware-matcher/hooks/useHardwareMatcher';
 import { GPUSelector } from './features/hardware-matcher/components/GPUSelector';
 import { ModelSelector } from './features/hardware-matcher/components/ModelSelector';
 import { VRAMBarGraph } from './features/hardware-matcher/components/VRAMBarGraph';
 import { PerformanceEstimator } from './features/hardware-matcher/components/PerformanceEstimator';
 
+// Tab 2 Components
 import { useCostCalculator } from './features/cost-calculator/hooks/useCostCalculator';
 import { PricingTable } from './features/cost-calculator/components/PricingTable';
 import { InteractiveTextSlider } from './features/cost-calculator/components/InteractiveTextSlider';
@@ -17,8 +19,10 @@ import { ProviderFilter } from './features/cost-calculator/components/ProviderFi
 const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
 
+  // Tab 1 State
   const { request: hwRequest, updateRequest: updateHwRequest, result: hwResult } = useHardwareMatcher();
 
+  // Tab 2 State
   const { 
     models, setModels, loading, setLoading, 
     promptTokens, setPromptTokens, 

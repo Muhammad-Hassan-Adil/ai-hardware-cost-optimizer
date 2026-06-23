@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { api } from '../../services/api';
 import { JSONLDMetadata } from './JSONLDMetadata';
-import { PSEOPage } from '../../types/database.types'; // wait, PSEOPage is not in types, I'll update it
+ // wait, PSEOPage is not in types, I'll update it
 
 export const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { slug } = useParams();
@@ -10,7 +9,7 @@ export const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
 
   useEffect(() => {
     if (slug) {
-
+      // In a real scenario, this fetches from the backend resolve endpoint
       fetch(`http://127.0.0.1:8000/api/v1/seo/resolve/${slug}`)
         .then(res => {
           if (res.ok) return res.json();

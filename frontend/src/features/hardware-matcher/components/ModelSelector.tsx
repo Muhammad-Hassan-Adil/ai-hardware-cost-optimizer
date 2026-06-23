@@ -1,5 +1,5 @@
 import React from 'react';
-import { HardwareMatchRequest } from '../hooks/useHardwareMatcher';
+import type { HardwareMatchRequest } from '../utils/memoryMath';
 import { Slider } from '../../../components/common/Slider';
 import { Card } from '../../../components/common/Card';
 

@@ -23,8 +23,10 @@ export function calculateHardwareMatch(req: HardwareMatchRequest): HardwareMatch
   const sysBandwidth = req.systemRamBandwidthGbps ?? 60.0;
   const seqLength = req.targetSequenceLength ?? 2048;
 
+  // 1. Total Weight Footprint (M_weights)
   const mWeights = req.parametersBillion * (req.bitsPerWeight / 8.0) * 1.15;
 
+  // 2. Context Memory KV-Cache (M_cache)
   const mCache = req.parametersBillion * 0.1 * (seqLength / 2048.0);
 
   const totalRequired = mWeights + mCache;

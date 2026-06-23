@@ -16,7 +16,7 @@ export const ProviderFilter: React.FC<ProviderFilterProps> = ({ providerFilter, 
     const fetchProviders = async () => {
       const { data } = await supabase.from('cloud_providers').select('name, slug');
       if (data) {
-        const formatted = data.map(p => ({ label: p.name, value: p.slug }));
+        const formatted = data.map((p: any) => ({ label: p.name, value: p.slug }));
         setProviders([{ label: "All Providers", value: "all" }, ...formatted]);
       }
     };

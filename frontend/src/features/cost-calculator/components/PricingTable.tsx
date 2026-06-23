@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { supabase } from '../../../services/supabaseClient';
-import { CloudModel } from '../../../types/database.types';
+import type { CloudModel } from '../../../types/database.types';
 import { Card } from '../../../components/common/Card';
 
 interface PricingTableProps {

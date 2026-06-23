@@ -1,5 +1,5 @@
 import React from 'react';
-import { HardwareMatchResult } from '../utils/memoryMath';
+import type { HardwareMatchResult } from '../utils/memoryMath';
 import { Card } from '../../../components/common/Card';
 
 interface PerformanceEstimatorProps {
