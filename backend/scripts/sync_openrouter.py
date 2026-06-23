@@ -3,6 +3,7 @@ import os
 import httpx
 from datetime import datetime
 
+# Add the parent directory to sys.path so we can import from app
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.core.config import settings
@@ -22,15 +23,17 @@ def fetch_openrouter_models():
         return response.json().get("data", [])
 
 def sync_models():
-
+    # Use service role key to bypass RLS for inserts/updates
     url = settings.SUPABASE_URL
     key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
     from supabase import create_client
     db = create_client(url, key)
-
+    
+    # Ensure "OpenRouter" provider exists
     provider_slug = "openrouter"
     provider_name = "OpenRouter"
-
+    
+    # Check if provider exists
     prov_res = db.table("cloud_providers").select("*").eq("slug", provider_slug).execute()
     
     if not prov_res.data:
@@ -47,6 +50,7 @@ def sync_models():
     models_data = fetch_openrouter_models()
     print(f"[{datetime.now()}] Retrieved {len(models_data)} models from OpenRouter. Syncing to Supabase...")
 
+    # Fetch all currently active models from this provider in DB
     existing_db_models = db.table("cloud_models").select("openrouter_id").eq("provider_id", provider_id).execute()
     existing_ids = {m["openrouter_id"] for m in existing_db_models.data}
     
@@ -58,8 +62,8 @@ def sync_models():
         context_length = m.get("context_length", 4096)
         
         pricing = m.get("pricing", {})
-
-
+        # OpenRouter returns pricing per token, we need per 1M tokens
+        # Sometimes pricing is -1 for free/unknown.
         raw_prompt = float(pricing.get("prompt", 0) or 0)
         raw_completion = float(pricing.get("completion", 0) or 0)
         
@@ -69,6 +73,7 @@ def sync_models():
         prompt_price = raw_prompt * 1_000_000
         completion_price = raw_completion * 1_000_000
 
+        # Cap at 999,999 to avoid NUMERIC(10,4) overflow
         prompt_price = min(prompt_price, 999999.0)
         completion_price = min(completion_price, 999999.0)
 
@@ -85,11 +90,13 @@ def sync_models():
             "last_synced_at": datetime.now().isoformat()
         }
 
+        # Upsert
         if openrouter_id in existing_ids:
             db.table("cloud_models").update(model_record).eq("openrouter_id", openrouter_id).execute()
         else:
             db.table("cloud_models").insert(model_record).execute()
 
+    # Deactivate models that are no longer present in OpenRouter
     inactive_ids = existing_ids - active_incoming_ids
     if inactive_ids:
         print(f"[{datetime.now()}] Deactivating {len(inactive_ids)} old models.")

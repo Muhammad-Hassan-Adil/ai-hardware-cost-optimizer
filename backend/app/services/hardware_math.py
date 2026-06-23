@@ -21,11 +21,12 @@ class HardwareMatchResponse(BaseModel):
     estimated_tokens_per_second: float
 
 def calculate_hardware_match(req: HardwareMatchRequest) -> HardwareMatchResponse:
-
-
+    # 1. Total Weight Footprint (M_weights)
+    # Parameters (Billion) * (Bits-per-weight / 8) * 1.15 (System Overhead Allowance)
     m_weights = req.parameters_billion * (req.bits_per_weight / 8.0) * 1.15
 
-
+    # 2. Context Memory KV-Cache (M_cache)
+    # Simplification: Parameters * 0.1 * (target sequence length / 2048)
     m_cache = req.parameters_billion * 0.1 * (req.target_sequence_length / 2048.0)
 
     total_required = m_weights + m_cache
@@ -41,11 +42,14 @@ def calculate_hardware_match(req: HardwareMatchRequest) -> HardwareMatchResponse
         status = "SYSTEM_OFFLOAD"
         f_gpu = vram_avail / total_required if total_required > 0 else 0
 
+    # Ensure f_gpu is clamped between 0 and 1
     f_gpu = max(0.0, min(1.0, f_gpu))
-
+    
+    # Weights allocation
     weights_on_gpu = m_weights * f_gpu
     weights_on_ram = m_weights * (1.0 - f_gpu)
 
+    # 4. Estimated Token Speed Calculation
     time_gpu = weights_on_gpu / req.gpu_memory_bandwidth_gb_s if req.gpu_memory_bandwidth_gb_s > 0 else float('inf')
     time_ram = weights_on_ram / req.system_ram_bandwidth_gb_s if req.system_ram_bandwidth_gb_s > 0 else float('inf')
     

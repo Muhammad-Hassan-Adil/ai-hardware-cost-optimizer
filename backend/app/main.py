@@ -9,6 +9,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
+# Setup CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # In production, set to specific origins (e.g. Cloudflare Pages URL)
@@ -19,8 +20,13 @@ app.add_middleware(
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the AI Hardware & Cost Optimizer API! The API is live.", "docs": f"{settings.API_V1_STR}/openapi.json"}
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
+# Mangum wrapper for AWS Lambda execution
 handler = Mangum(app)

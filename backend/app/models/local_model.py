@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from uuid import UUID
@@ -14,8 +14,7 @@ class Quantization(QuantizationBase):
     model_id: UUID
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True, protected_namespaces=())
 
 class LocalModelBase(BaseModel):
     name: str
@@ -31,5 +30,4 @@ class LocalModel(LocalModelBase):
     updated_at: datetime
     quantizations: Optional[List[Quantization]] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True, protected_namespaces=())
