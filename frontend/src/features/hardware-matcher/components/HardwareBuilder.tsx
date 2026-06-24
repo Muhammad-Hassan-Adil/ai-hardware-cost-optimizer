@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/common/Card';
 import { Slider } from '../../../components/common/Slider';
-import { Plus, X, Cpu, MemoryStick } from 'lucide-react';
+import { Plus, X, Cpu, MemoryStick, CloudDownload, Loader2 } from 'lucide-react';
 import type { HardwareItem } from '../utils/memoryMath';
 
 interface HardwareBuilderProps {
@@ -20,6 +20,9 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   totalVram
 }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
+  const [showFetchInput, setShowFetchInput] = useState(false);
+  const [fetchName, setFetchName] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleAddGpu = () => {
     addHardwareItem({
@@ -41,6 +44,40 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
       bandwidthGbps: 60
     });
     setShowAddMenu(false);
+  };
+
+  const handleFetchGpu = async () => {
+    if (!fetchName.trim()) return;
+    setIsFetching(true);
+    
+    try {
+      const res = await fetch('/api/v1/hardware/fetch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: fetchName.trim() })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        addHardwareItem({
+          id: `gpu-fetched-${Date.now()}`,
+          type: 'gpu',
+          name: data.name || fetchName,
+          vramGb: data.vram_gb,
+          bandwidthGbps: data.memory_bandwidth_gb_s
+        });
+      } else {
+        alert("Failed to fetch GPU specs.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error fetching GPU specs.");
+    } finally {
+      setIsFetching(false);
+      setFetchName('');
+      setShowFetchInput(false);
+      setShowAddMenu(false);
+    }
   };
 
   // Compute Power Rank Logic
@@ -89,10 +126,36 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
               >
                 <MemoryStick size={16} /> System RAM
               </button>
+              <button 
+                onClick={() => setShowFetchInput(true)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-blue-600 dark:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-t border-slate-100 dark:border-slate-700/50"
+              >
+                <CloudDownload size={16} /> Other (Fetch Live)
+              </button>
             </div>
           )}
         </div>
       </div>
+      
+      {showFetchInput && (
+        <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl flex gap-2">
+          <input 
+            type="text" 
+            placeholder="e.g. Radeon Pro W7900" 
+            className="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white"
+            value={fetchName}
+            onChange={(e) => setFetchName(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleFetchGpu()}
+          />
+          <button 
+            onClick={handleFetchGpu}
+            disabled={isFetching}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            {isFetching ? <Loader2 size={16} className="animate-spin" /> : 'Fetch'}
+          </button>
+        </div>
+      )}
       
       <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
         {hardwareItems.map(item => (
