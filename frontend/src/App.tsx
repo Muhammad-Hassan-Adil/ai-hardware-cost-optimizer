@@ -14,6 +14,7 @@ import { TermsOfService } from './pages/TermsOfService';
 import { useHardwareMatcher } from './features/hardware-matcher/hooks/useHardwareMatcher';
 import { HardwareBuilder } from './features/hardware-matcher/components/HardwareBuilder';
 import { ModelSelector } from './features/hardware-matcher/components/ModelSelector';
+import { AutoRecommender } from './features/hardware-matcher/components/AutoRecommender';
 import { VRAMBarGraph } from './features/hardware-matcher/components/VRAMBarGraph';
 import { PerformanceEstimator } from './features/hardware-matcher/components/PerformanceEstimator';
 
@@ -135,22 +136,25 @@ const CalculatorTabs: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+            className="space-y-6"
           >
-            <div className="space-y-6">
-              <HardwareBuilder 
-                hardwareItems={hardwareItems}
-                addHardwareItem={addHardwareItem}
-                updateHardwareItem={updateHardwareItem}
-                removeHardwareItem={removeHardwareItem}
-                totalVram={hwRequest.gpuVramGb}
-              />
-              <ModelSelector request={hwRequest} updateRequest={updateHwRequest} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <HardwareBuilder 
+                  hardwareItems={hardwareItems}
+                  addHardwareItem={addHardwareItem}
+                  updateHardwareItem={updateHardwareItem}
+                  removeHardwareItem={removeHardwareItem}
+                  totalVram={hwRequest.gpuVramGb}
+                />
+                <ModelSelector request={hwRequest} updateRequest={updateHwRequest} />
+              </div>
+              <div className="space-y-6">
+                <VRAMBarGraph result={hwResult} />
+                <PerformanceEstimator result={hwResult} />
+              </div>
             </div>
-            <div className="space-y-6">
-              <VRAMBarGraph result={hwResult} />
-              <PerformanceEstimator result={hwResult} />
-            </div>
+            <AutoRecommender baseHardware={hwRequest} />
           </motion.div>
         ) : (
           <motion.div 
