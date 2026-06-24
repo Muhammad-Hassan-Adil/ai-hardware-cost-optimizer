@@ -57,8 +57,8 @@ export const PricingTable: React.FC<PricingTableProps> = ({
         />
       </div>
       <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
+        <div className="overflow-x-auto w-full custom-scrollbar">
+        <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400 border-collapse min-w-[600px]">
           <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
             <tr>
               <th scope="col" className="px-6 py-3 whitespace-nowrap">Model</th>

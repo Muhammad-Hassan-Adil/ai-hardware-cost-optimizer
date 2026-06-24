@@ -24,5 +24,15 @@ export const api = {
     });
     if (!response.ok) throw new Error('Failed to match hardware');
     return response.json();
+  },
+
+  async fetchExternalGpu(name: string): Promise<GPU> {
+    const response = await fetch(`${API_BASE_URL}/hardware/fetch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) throw new Error('Failed to fetch GPU specs');
+    return response.json();
   }
 };

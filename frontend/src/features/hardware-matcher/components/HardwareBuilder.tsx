@@ -3,6 +3,8 @@ import { Card } from '../../../components/common/Card';
 import { Slider } from '../../../components/common/Slider';
 import { Plus, X, Cpu, MemoryStick, CloudDownload, Loader2 } from 'lucide-react';
 import type { HardwareItem } from '../utils/memoryMath';
+import { api } from '../../../services/api';
+import type { GPU } from '../../../types/database.types';
 
 interface HardwareBuilderProps {
   hardwareItems: HardwareItem[];
@@ -23,6 +25,11 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   const [showFetchInput, setShowFetchInput] = useState(false);
   const [fetchName, setFetchName] = useState('');
   const [isFetching, setIsFetching] = useState(false);
+  const [dbGpus, setDbGpus] = useState<GPU[]>([]);
+
+  React.useEffect(() => {
+    api.getGPUs().then(setDbGpus).catch(console.error);
+  }, []);
 
   const handleAddGpu = () => {
     addHardwareItem({
@@ -51,24 +58,14 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
     setIsFetching(true);
     
     try {
-      const res = await fetch('/api/v1/hardware/fetch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: fetchName.trim() })
+      const data = await api.fetchExternalGpu(fetchName.trim());
+      addHardwareItem({
+        id: `gpu-fetched-${Date.now()}`,
+        type: 'gpu',
+        name: data.name || fetchName,
+        vramGb: data.vram_gb,
+        bandwidthGbps: data.memory_bandwidth_gb_s
       });
-      
-      if (res.ok) {
-        const data = await res.json();
-        addHardwareItem({
-          id: `gpu-fetched-${Date.now()}`,
-          type: 'gpu',
-          name: data.name || fetchName,
-          vramGb: data.vram_gb,
-          bandwidthGbps: data.memory_bandwidth_gb_s
-        });
-      } else {
-        alert("Failed to fetch GPU specs.");
-      }
     } catch (e) {
       console.error(e);
       alert("Error fetching GPU specs.");
@@ -100,7 +97,7 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   }
 
   return (
-    <Card className="p-6 flex flex-col h-full">
+    <Card className="p-6 flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-bold text-slate-900 dark:text-white">My Hardware</h3>
         
@@ -113,7 +110,28 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
           </button>
           
           {showAddMenu && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-20">
+            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-20">
+              <div className="max-h-48 overflow-y-auto custom-scrollbar">
+                {dbGpus.map(gpu => (
+                  <button 
+                    key={gpu.id}
+                    onClick={() => {
+                      addHardwareItem({
+                        id: `gpu-${gpu.id}-${Date.now()}`,
+                        type: 'gpu',
+                        name: gpu.name,
+                        vramGb: gpu.vram_gb,
+                        bandwidthGbps: gpu.memory_bandwidth_gb_s
+                      });
+                      setShowAddMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-100 dark:border-slate-700/50"
+                  >
+                    <div className="font-medium truncate">{gpu.name}</div>
+                    <div className="text-xs text-slate-500">{gpu.vram_gb}GB • {gpu.memory_bandwidth_gb_s}GB/s</div>
+                  </button>
+                ))}
+              </div>
               <button 
                 onClick={handleAddGpu}
                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"

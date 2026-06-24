@@ -13,6 +13,7 @@ import { TermsOfService } from './pages/TermsOfService';
 // Tab 1 Components
 import { useHardwareMatcher } from './features/hardware-matcher/hooks/useHardwareMatcher';
 import { HardwareBuilder } from './features/hardware-matcher/components/HardwareBuilder';
+import { GPUSelector } from './features/hardware-matcher/components/GPUSelector';
 import { ModelSelector } from './features/hardware-matcher/components/ModelSelector';
 import { AutoRecommender } from './features/hardware-matcher/components/AutoRecommender';
 import { VRAMBarGraph } from './features/hardware-matcher/components/VRAMBarGraph';
@@ -55,6 +56,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mt-4">
           Accurately estimate local LLM hardware requirements or compare cloud API costs dynamically.
         </p>
+
+        <nav className="flex justify-center gap-6 mt-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+          <Link to="/about" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            About
+          </Link>
+          <Link to="/privacy-policy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            Privacy Policy
+          </Link>
+          <Link to="/terms-of-service" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            Terms of Service
+          </Link>
+        </nav>
       </header>
 
       <main className="flex-1 w-full">
@@ -91,7 +104,7 @@ const CalculatorTabs: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       <div className="flex justify-center">
-        <div className="w-full max-w-md bg-white dark:bg-slate-800/50 p-1 rounded-xl backdrop-blur-xl border border-slate-300 dark:border-slate-700/50 shadow-sm">
+        <div className="w-full max-w-2xl bg-white dark:bg-slate-800/50 p-1 rounded-xl backdrop-blur-xl border border-slate-300 dark:border-slate-700/50 shadow-sm">
           <div className="flex gap-1 relative">
             <button
               onClick={() => setActiveTab(0)}
@@ -111,6 +124,16 @@ const CalculatorTabs: React.FC = () => {
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
+              Hardware Builder
+            </button>
+            <button
+              onClick={() => setActiveTab(2)}
+              className={`flex-1 relative z-10 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center ${
+                activeTab === 2
+                  ? 'text-white'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
               Cloud API Cost Calculator
             </button>
 
@@ -119,8 +142,8 @@ const CalculatorTabs: React.FC = () => {
               className="absolute inset-y-1 bg-blue-600 dark:bg-blue-600 rounded-lg shadow-sm z-0"
               initial={false}
               animate={{
-                left: activeTab === 0 ? '0.25rem' : '50%',
-                width: 'calc(50% - 0.25rem)'
+                left: `${(activeTab * 100) / 3}%`,
+                width: `calc(100% / 3 - 0.25rem)`
               }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             />
@@ -132,6 +155,26 @@ const CalculatorTabs: React.FC = () => {
         {activeTab === 0 ? (
           <motion.div 
             key="tab0"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <GPUSelector request={hwRequest} updateRequest={updateHwRequest} />
+                <ModelSelector request={hwRequest} updateRequest={updateHwRequest} />
+              </div>
+              <div className="space-y-6">
+                <VRAMBarGraph result={hwResult} />
+                <PerformanceEstimator result={hwResult} />
+              </div>
+            </div>
+          </motion.div>
+        ) : activeTab === 1 ? (
+          <motion.div 
+            key="tab1"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
