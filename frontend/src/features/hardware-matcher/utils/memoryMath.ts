@@ -1,3 +1,14 @@
+export type HardwareItemType = 'gpu' | 'ram';
+
+export interface HardwareItem {
+  id: string;
+  type: HardwareItemType;
+  name: string;
+  vramGb?: number;             // Used if type == 'gpu'
+  bandwidthGbps?: number;      // Used for either GPU or RAM
+  systemRamGb?: number;        // Used if type == 'ram'
+}
+
 export interface HardwareMatchRequest {
   gpuVramGb: number;
   gpuMemoryBandwidthGbps: number;
@@ -16,6 +27,35 @@ export interface HardwareMatchResult {
   vramAvailableGb: number;
   gpuWeightFraction: number;
   estimatedTokensPerSecond: number;
+}
+
+export function aggregateHardware(items: HardwareItem[], baseRequest: HardwareMatchRequest): HardwareMatchRequest {
+  const gpus = items.filter(i => i.type === 'gpu');
+  const rams = items.filter(i => i.type === 'ram');
+
+  // Pool GPU VRAM (Sum)
+  const totalGpuVramGb = gpus.reduce((sum, gpu) => sum + (gpu.vramGb || 0), 0);
+  
+  // Average GPU Bandwidth (More realistic than sum due to PCIe bottlenecks)
+  const avgGpuBandwidthGbps = gpus.length > 0 
+    ? gpus.reduce((sum, gpu) => sum + (gpu.bandwidthGbps || 0), 0) / gpus.length 
+    : 0;
+
+  // Pool System RAM (Sum)
+  const totalSysRamGb = rams.reduce((sum, ram) => sum + (ram.systemRamGb || 0), 0);
+  
+  // Average System RAM Bandwidth
+  const avgSysRamBandwidthGbps = rams.length > 0
+    ? rams.reduce((sum, ram) => sum + (ram.bandwidthGbps || 0), 0) / rams.length
+    : 0;
+
+  return {
+    ...baseRequest,
+    gpuVramGb: totalGpuVramGb,
+    gpuMemoryBandwidthGbps: avgGpuBandwidthGbps,
+    systemRamGb: totalSysRamGb || undefined,
+    systemRamBandwidthGbps: avgSysRamBandwidthGbps || undefined,
+  };
 }
 
 export function calculateHardwareMatch(req: HardwareMatchRequest): HardwareMatchResult {

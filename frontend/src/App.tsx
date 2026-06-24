@@ -12,7 +12,7 @@ import { TermsOfService } from './pages/TermsOfService';
 
 // Tab 1 Components
 import { useHardwareMatcher } from './features/hardware-matcher/hooks/useHardwareMatcher';
-import { GPUSelector } from './features/hardware-matcher/components/GPUSelector';
+import { HardwareBuilder } from './features/hardware-matcher/components/HardwareBuilder';
 import { ModelSelector } from './features/hardware-matcher/components/ModelSelector';
 import { VRAMBarGraph } from './features/hardware-matcher/components/VRAMBarGraph';
 import { PerformanceEstimator } from './features/hardware-matcher/components/PerformanceEstimator';
@@ -69,7 +69,15 @@ const CalculatorTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   // Tab 1 State
-  const { request: hwRequest, updateRequest: updateHwRequest, result: hwResult } = useHardwareMatcher();
+  const { 
+    request: hwRequest, 
+    updateRequest: updateHwRequest, 
+    result: hwResult,
+    hardwareItems,
+    addHardwareItem,
+    updateHardwareItem,
+    removeHardwareItem
+  } = useHardwareMatcher();
 
   // Tab 2 State
   const { 
@@ -130,7 +138,13 @@ const CalculatorTabs: React.FC = () => {
             className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
             <div className="space-y-6">
-              <GPUSelector request={hwRequest} updateRequest={updateHwRequest} />
+              <HardwareBuilder 
+                hardwareItems={hardwareItems}
+                addHardwareItem={addHardwareItem}
+                updateHardwareItem={updateHardwareItem}
+                removeHardwareItem={removeHardwareItem}
+                totalVram={hwRequest.gpuVramGb}
+              />
               <ModelSelector request={hwRequest} updateRequest={updateHwRequest} />
             </div>
             <div className="space-y-6">
