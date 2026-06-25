@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/common/Card';
-import { analyzePromptWithOllama, type PromptAnalysisResult } from '../utils/ollama_service';
+import { analyzePrompt, type PromptAnalysisResult } from '../utils/analyzer_service';
 import type { ImageResolution } from '../utils/tokenizer_service';
 import { AlertCircle, Loader2 } from 'lucide-react';
 
@@ -19,16 +19,16 @@ export const PromptDecomposer: React.FC<PromptDecomposerProps> = ({
   prompt, setPrompt, imageCount, setImageCount, imageResolution, setImageResolution, analysis, setAnalysis
 }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [ollamaError, setOllamaError] = useState<string | null>(null);
+  const [analyzerError, setAnalyzerError] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
-    setOllamaError(null);
+    setAnalyzerError(null);
     try {
-      const result = await analyzePromptWithOllama(prompt, imageCount);
+      const result = await analyzePrompt(prompt, imageCount);
       setAnalysis(result);
     } catch (err: any) {
-      setOllamaError("Local model offline — output token estimates unavailable. Input costs are still exact.");
+      setAnalyzerError("Analyzer unavailable — check your GROQ API key.");
       setAnalysis(null);
     } finally {
       setIsAnalyzing(false);
@@ -94,14 +94,14 @@ export const PromptDecomposer: React.FC<PromptDecomposerProps> = ({
           </button>
         </div>
 
-        {ollamaError && (
+        {analyzerError && (
           <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-lg flex items-start gap-2 text-yellow-800 dark:text-yellow-200">
             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            <p className="text-sm">{ollamaError}</p>
+            <p className="text-sm">{analyzerError}</p>
           </div>
         )}
 
-        {analysis && !ollamaError && (
+        {analysis && !analyzerError && (
           <div className="mt-6 space-y-4">
             <h3 className="text-sm font-medium text-slate-900 dark:text-white">Decomposition Breakdown</h3>
             <div className="overflow-x-auto">

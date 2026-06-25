@@ -7,7 +7,7 @@ import { SmartRouting } from './SmartRouting';
 import { PricingTable } from './PricingTable';
 import { ProviderFilter } from './ProviderFilter';
 import type { ImageResolution } from '../utils/tokenizer_service';
-import type { PromptAnalysisResult } from '../utils/ollama_service';
+import type { PromptAnalysisResult } from '../utils/analyzer_service';
 
 export const CostCalculatorTab: React.FC = () => {
   const { 

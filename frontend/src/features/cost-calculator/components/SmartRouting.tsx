@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { CloudModel } from '../../../types/database.types';
-import type { PromptAnalysisResult } from '../utils/ollama_service';
+import type { PromptAnalysisResult } from '../utils/analyzer_service';
 import { Card } from '../../../components/common/Card';
 import { Bot, Zap, ArrowRight, TrendingDown } from 'lucide-react';
 

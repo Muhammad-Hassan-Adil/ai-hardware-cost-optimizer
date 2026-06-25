@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { CloudModel } from '../../../types/database.types';
-import type { PromptAnalysisResult } from '../utils/ollama_service';
+import type { PromptAnalysisResult } from '../utils/analyzer_service';
 import type { CostModifiersState } from './CostModifiers';
 import { estimateTextTokens, estimateImageTokens, type ImageResolution } from '../utils/tokenizer_service';
 import { Card } from '../../../components/common/Card';
