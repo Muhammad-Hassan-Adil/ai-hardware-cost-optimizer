@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEOWrapper } from './components/seo/SEOWrapper';
 import { Moon, Sun } from 'lucide-react';
@@ -37,40 +37,51 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     }
   }, [isDark]);
 
+  const [searchParams] = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'matcher';
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-      <header className="py-8 text-center relative max-w-4xl mx-auto px-4 w-full">
-        <button
-          onClick={() => setIsDark(!isDark)}
-          className="absolute right-4 top-8 p-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
-          aria-label="Toggle Dark Mode"
-        >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <Link to="/" className="flex-shrink-0">
+            <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              AI Hardware & Cost Optimizer
+            </h1>
+          </Link>
 
-        <Link to="/">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            AI Hardware & Cost Optimizer Hub
-          </h1>
-        </Link>
-        <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mt-4">
-          Accurately estimate local LLM hardware requirements or compare cloud API costs dynamically.
-        </p>
+          <nav className="hidden md:flex items-center p-1 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+            <Link 
+              to="/?tab=matcher" 
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'matcher' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            >
+              Local Hardware Matcher
+            </Link>
+            <Link 
+              to="/?tab=builder" 
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'builder' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            >
+              Hardware Builder
+            </Link>
+            <Link 
+              to="/?tab=cloud" 
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'cloud' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            >
+              Cloud Cost Calculator
+            </Link>
+          </nav>
 
-        <nav className="flex justify-center gap-6 mt-6 text-sm font-medium text-slate-600 dark:text-slate-300">
-          <Link to="/about" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            About
-          </Link>
-          <Link to="/privacy-policy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Privacy Policy
-          </Link>
-          <Link to="/terms-of-service" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Terms of Service
-          </Link>
-        </nav>
+          <button
+            onClick={() => setIsDark(!isDark)}
+            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            aria-label="Toggle Dark Mode"
+          >
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
       </header>
 
-      <main className="flex-1 w-full">
+      <main className="flex-1 w-full mt-8">
         {children}
       </main>
 
@@ -80,7 +91,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 const CalculatorTabs: React.FC = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [searchParams] = useSearchParams();
+  const tabQuery = searchParams.get('tab') || 'matcher';
+  const activeTab = tabQuery === 'matcher' ? 0 : tabQuery === 'builder' ? 1 : 2;
 
   // Tab 1 State
   const { 
@@ -102,55 +115,7 @@ const CalculatorTabs: React.FC = () => {
   } = useCostCalculator();
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
-      <div className="flex justify-center">
-        <div className="w-full max-w-2xl bg-white dark:bg-slate-800/50 p-1 rounded-xl backdrop-blur-xl border border-slate-300 dark:border-slate-700/50 shadow-sm">
-          <div className="flex gap-1 relative">
-            <button
-              onClick={() => setActiveTab(0)}
-              className={`flex-1 relative z-10 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center ${
-                activeTab === 0
-                  ? 'text-white'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Local Hardware Matcher
-            </button>
-            <button
-              onClick={() => setActiveTab(1)}
-              className={`flex-1 relative z-10 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center ${
-                activeTab === 1
-                  ? 'text-white'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Hardware Builder
-            </button>
-            <button
-              onClick={() => setActiveTab(2)}
-              className={`flex-1 relative z-10 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-center ${
-                activeTab === 2
-                  ? 'text-white'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Cloud API Cost Calculator
-            </button>
-
-            {/* Framer motion pill for active tab background */}
-            <motion.div 
-              className="absolute inset-y-1 bg-blue-600 dark:bg-blue-600 rounded-lg shadow-sm z-0"
-              initial={false}
-              animate={{
-                left: `${(activeTab * 100) / 3}%`,
-                width: `calc(100% / 3 - 0.25rem)`
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            />
-          </div>
-        </div>
-      </div>
-
+    <div className="max-w-6xl mx-auto p-6">
       <AnimatePresence mode="wait">
         {activeTab === 0 ? (
           <motion.div 
