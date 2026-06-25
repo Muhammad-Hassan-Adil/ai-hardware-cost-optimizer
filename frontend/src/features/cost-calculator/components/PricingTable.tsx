@@ -19,7 +19,7 @@ export const PricingTable: React.FC<PricingTableProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 20;
+  const rowsPerPage = 15;
 
   useEffect(() => {
     setCurrentPage(1);

@@ -54,10 +54,10 @@ If image count is > 0, you must include a "vision" subtask and set vision_requir
         model: import.meta.env.VITE_GROQ_MODEL ?? "qwen/qwen3-32b",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: prompt || "Empty prompt" }
+          { role: "user", content: prompt }
         ],
         temperature: 0.1,
-        max_tokens: 1024,
+        max_tokens: 2048,
         response_format: { type: "json_object" }
       })
     });
@@ -73,7 +73,13 @@ If image count is > 0, you must include a "vision" subtask and set vision_requir
       throw new Error("No content returned from Groq");
     }
 
-    const parsed: PromptAnalysisResult = JSON.parse(content);
+    const cleaned = content
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim();
+      
+    const parsed: PromptAnalysisResult = JSON.parse(cleaned);
     
     // Minimal validation
     if (!parsed.subtasks || typeof parsed.total_output_tokens !== 'number') {

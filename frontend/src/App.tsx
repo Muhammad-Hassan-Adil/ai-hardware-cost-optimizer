@@ -34,7 +34,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     }
   }, [isDark]);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const currentTab = searchParams.get('tab') || 'matcher';
 
   return (
@@ -49,24 +49,24 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center p-1 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
-              <Link 
-                to="/?tab=matcher" 
+              <button 
+                onClick={() => setSearchParams({ tab: 'matcher' })}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'matcher' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Local Hardware Matcher
-              </Link>
-              <Link 
-                to="/?tab=builder" 
+              </button>
+              <button 
+                onClick={() => setSearchParams({ tab: 'builder' })}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'builder' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Hardware Builder
-              </Link>
-              <Link 
-                to="/?tab=cloud" 
+              </button>
+              <button 
+                onClick={() => setSearchParams({ tab: 'cloud' })}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'cloud' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Cloud Cost Calculator
-              </Link>
+              </button>
             </nav>
 
             <button
