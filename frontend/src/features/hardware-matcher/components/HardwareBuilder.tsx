@@ -145,7 +145,7 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
                 <MemoryStick size={16} /> System RAM
               </button>
               <button 
-                onClick={() => setShowFetchInput(true)}
+                onClick={() => { setShowFetchInput(true); setShowAddMenu(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-blue-600 dark:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-t border-slate-100 dark:border-slate-700/50"
               >
                 <CloudDownload size={16} /> Other (Fetch Live)

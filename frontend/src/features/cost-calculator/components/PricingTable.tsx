@@ -18,6 +18,12 @@ export const PricingTable: React.FC<PricingTableProps> = ({
   models, setModels, loading, setLoading, promptTokens, completionTokens, providerFilter
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, providerFilter]);
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -41,6 +47,9 @@ export const PricingTable: React.FC<PricingTableProps> = ({
     const matchesSearch = m.friendly_name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesProvider && matchesSearch;
   });
+
+  const totalPages = Math.ceil(filteredModels.length / rowsPerPage);
+  const paginatedModels = filteredModels.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   return (
     <div className="space-y-4">
@@ -70,10 +79,10 @@ export const PricingTable: React.FC<PricingTableProps> = ({
           <tbody>
             {loading ? (
               <tr><td colSpan={4} className="px-6 py-4 text-center">Loading pricing data...</td></tr>
-            ) : filteredModels.length === 0 ? (
+            ) : paginatedModels.length === 0 ? (
               <tr><td colSpan={4} className="px-6 py-4 text-center">No models found</td></tr>
             ) : (
-              filteredModels.map((model) => {
+              paginatedModels.map((model) => {
                 const promptCost = (model.prompt_price_per_1m_usd / 1000000) * promptTokens;
                 const completionCost = (model.completion_price_per_1m_usd / 1000000) * completionTokens;
                 const totalCost = promptCost + completionCost;
@@ -98,6 +107,29 @@ export const PricingTable: React.FC<PricingTableProps> = ({
             )}
           </tbody>
         </table>
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-3 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 gap-4">
+            <div className="text-sm text-slate-500 dark:text-slate-400">
+              Showing <span className="font-medium text-slate-900 dark:text-white">{((currentPage - 1) * rowsPerPage) + 1}</span> to <span className="font-medium text-slate-900 dark:text-white">{Math.min(currentPage * rowsPerPage, filteredModels.length)}</span> of <span className="font-medium text-slate-900 dark:text-white">{filteredModels.length}</span> models
+            </div>
+            <div className="flex gap-2">
+              <button 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-600 disabled:opacity-50 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                Previous
+              </button>
+              <button 
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-600 disabled:opacity-50 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       </Card>
     </div>

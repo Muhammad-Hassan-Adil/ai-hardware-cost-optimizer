@@ -58,7 +58,11 @@ export const AutoRecommender: React.FC<AutoRecommenderProps> = ({ baseHardware }
       }
     }
 
-    validRecs.sort((a, b) => {
+    // Sort by Speed (Tokens per second)
+    const sortedBySpeed = [...validRecs].sort((a, b) => b.tokensPerSecond - a.tokensPerSecond);
+
+    // Sort by Capability (Largest parameter size, then highest quantization, then tier)
+    const sortedByCapability = [...validRecs].sort((a, b) => {
       if (a.tier !== b.tier) return a.tier - b.tier; 
       if (b.model.parameter_size_billion !== a.model.parameter_size_billion) {
         return b.model.parameter_size_billion - a.model.parameter_size_billion;
@@ -69,12 +73,38 @@ export const AutoRecommender: React.FC<AutoRecommenderProps> = ({ baseHardware }
     const finalRecs: Recommendation[] = [];
     const seenModelIds = new Set<string>();
 
-    for (const rec of validRecs) {
+    const addRec = (rec: Recommendation) => {
       if (!seenModelIds.has(rec.model.id)) {
         seenModelIds.add(rec.model.id);
         finalRecs.push(rec);
-        if (finalRecs.length >= 3) break;
       }
+    };
+
+    // 1. Max Capability (Largest model that fits best)
+    if (sortedByCapability.length > 0) {
+      addRec(sortedByCapability[0]);
+    }
+
+    // 2. Balanced (A model slightly smaller but faster)
+    for (const rec of sortedByCapability) {
+      if (sortedByCapability.length > 0 && rec.model.parameter_size_billion < sortedByCapability[0].model.parameter_size_billion) {
+        addRec(rec);
+        break; // Only add one balanced
+      }
+    }
+
+    // 3. Max Speed (Absolute fastest tokens per second)
+    for (const rec of sortedBySpeed) {
+      if (!seenModelIds.has(rec.model.id)) {
+        addRec(rec);
+        break; // Only add one max speed
+      }
+    }
+
+    // Fill the rest if we don't have 3 yet
+    for (const rec of sortedByCapability) {
+      if (finalRecs.length >= 3) break;
+      addRec(rec);
     }
 
     return finalRecs;

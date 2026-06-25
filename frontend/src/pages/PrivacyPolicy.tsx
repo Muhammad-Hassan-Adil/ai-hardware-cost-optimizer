@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 export const PrivacyPolicy: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -11,9 +12,9 @@ export const PrivacyPolicy: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="max-w-4xl mx-auto p-6 space-y-6 text-slate-700 dark:text-slate-300"
     >
-      <Link to="/" className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium">
-        <ArrowLeft size={18} /> Back to Hub
-      </Link>
+      <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium cursor-pointer">
+        <ArrowLeft size={18} /> Back
+      </button>
       <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Privacy Policy</h1>
       
       <div className="space-y-4 bg-white dark:bg-slate-900/40 p-8 rounded-2xl backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-sm">
