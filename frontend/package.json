@@ -18,7 +18,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-helmet": "^6.1.0",
-    "react-router-dom": "^7.18.0"
+    "react-router-dom": "^7.18.0",
+    "tiktoken": "^1.0.22"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",

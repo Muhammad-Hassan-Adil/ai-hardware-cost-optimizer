@@ -20,10 +20,7 @@ import { VRAMBarGraph } from './features/hardware-matcher/components/VRAMBarGrap
 import { PerformanceEstimator } from './features/hardware-matcher/components/PerformanceEstimator';
 
 // Tab 2 Components
-import { useCostCalculator } from './features/cost-calculator/hooks/useCostCalculator';
-import { PricingTable } from './features/cost-calculator/components/PricingTable';
-import { InteractiveTextSlider } from './features/cost-calculator/components/InteractiveTextSlider';
-import { ProviderFilter } from './features/cost-calculator/components/ProviderFilter';
+import { CostCalculatorTab } from './features/cost-calculator/components/CostCalculatorTab';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDark, setIsDark] = useState(true);
@@ -108,13 +105,8 @@ const CalculatorTabs: React.FC = () => {
     removeHardwareItem
   } = useHardwareMatcher();
 
-  // Tab 2 State
-  const { 
-    models, setModels, loading, setLoading, 
-    promptTokens, setPromptTokens, 
-    completionTokens, setCompletionTokens,
-    providerFilter, setProviderFilter
-  } = useCostCalculator();
+  // Tab 2 State is now encapsulated in CostCalculatorTab, but we can leave the hook here if other things need it or we can just remove it from App.tsx since it's not used here anymore.
+  // Actually, I should remove it from here.
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -175,23 +167,7 @@ const CalculatorTabs: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-1 space-y-6">
-                <InteractiveTextSlider 
-                  promptTokens={promptTokens} setPromptTokens={setPromptTokens}
-                  completionTokens={completionTokens} setCompletionTokens={setCompletionTokens}
-                />
-                <ProviderFilter providerFilter={providerFilter} setProviderFilter={setProviderFilter} />
-              </div>
-              <div className="lg:col-span-2 min-w-0">
-                <PricingTable 
-                  models={models} setModels={setModels}
-                  loading={loading} setLoading={setLoading}
-                  promptTokens={promptTokens} completionTokens={completionTokens}
-                  providerFilter={providerFilter}
-                />
-              </div>
-            </div>
+            <CostCalculatorTab />
           </motion.div>
         )}
       </AnimatePresence>

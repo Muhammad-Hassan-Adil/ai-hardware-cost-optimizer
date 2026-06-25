@@ -58,4 +58,18 @@ export interface CloudModel {
   completion_price_per_1m_usd: number;
   context_length: number;
   is_active: boolean;
+  supports_vision: boolean;
+  tier: "lightweight" | "standard" | "frontier";
+}
+
+export interface PromptAnalysis {
+  id: string;
+  created_at: string;
+  prompt_text: string;
+  image_count: number;
+  image_size: string;
+  analysis: any; // Or type it strictly according to the Ollama output
+  total_input_tokens: number;
+  total_output_tokens: number;
+  confidence: number;
 }
