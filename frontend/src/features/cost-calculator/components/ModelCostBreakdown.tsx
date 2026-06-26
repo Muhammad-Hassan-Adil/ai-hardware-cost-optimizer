@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import type { CloudModel } from '../../../types/database.types';
 import type { PromptAnalysisResult } from '../utils/analyzer_service';
 import type { CostModifiersState } from './CostModifiers';
@@ -19,8 +19,14 @@ interface ModelCostBreakdownProps {
 export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
   models, prompt, imageCount, imageResolution, modifiers, analysis, providerFilter
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
-  const groupedModels = useMemo(() => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [providerFilter, prompt, imageCount, imageResolution, modifiers, analysis]);
+
+  const { groupedModels, totalModels } = useMemo(() => {
     let filtered = models.filter(m => m.is_active);
     if (providerFilter !== 'all') {
       filtered = filtered.filter(m => (m as any).cloud_providers?.slug === providerFilter);
@@ -81,15 +87,20 @@ export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
     });
 
     calculated.sort((a, b) => a.subtotal - b.subtotal);
+    
+    const totalModels = calculated.length;
+    const paginated = calculated.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const grouped: Record<string, typeof calculated> = {};
-    calculated.forEach(item => {
+    paginated.forEach(item => {
       if (!grouped[item.providerName]) grouped[item.providerName] = [];
       grouped[item.providerName].push(item);
     });
 
-    return grouped;
-  }, [models, prompt, imageCount, imageResolution, modifiers, analysis, providerFilter]);
+    return { groupedModels: grouped, totalModels };
+  }, [models, prompt, imageCount, imageResolution, modifiers, analysis, providerFilter, currentPage]);
+
+  const totalPages = Math.ceil(totalModels / itemsPerPage);
 
   if (Object.keys(groupedModels).length === 0) {
     return <div className="text-center py-8 text-slate-500">No models found for the selected criteria.</div>;
@@ -167,6 +178,30 @@ export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
           </div>
         </div>
       ))}
+      
+      {totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 mt-8 border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 gap-4">
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            Showing <span className="font-medium text-slate-900 dark:text-white">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium text-slate-900 dark:text-white">{Math.min(currentPage * itemsPerPage, totalModels)}</span> of <span className="font-medium text-slate-900 dark:text-white">{totalModels}</span> models
+          </div>
+          <div className="flex gap-2">
+            <button 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-600 disabled:opacity-50 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              Previous
+            </button>
+            <button 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-600 disabled:opacity-50 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
