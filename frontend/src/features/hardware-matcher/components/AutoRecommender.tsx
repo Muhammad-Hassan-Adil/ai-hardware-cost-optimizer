@@ -17,7 +17,7 @@ interface AutoRecommenderProps {
 interface Recommendation {
   model: LocalModel;
   quantization: any;
-  tier: 1 | 2;
+  tier: 1 | 2 | 3;
   tokensPerSecond: number;
 }
 
@@ -54,6 +54,8 @@ export const AutoRecommender: React.FC<AutoRecommenderProps> = ({ baseHardware }
           validRecs.push({ model, quantization: quant, tier: 1, tokensPerSecond: result.estimatedTokensPerSecond });
         } else if (result.status === 'SYSTEM_OFFLOAD') {
           validRecs.push({ model, quantization: quant, tier: 2, tokensPerSecond: result.estimatedTokensPerSecond });
+        } else if (result.status === 'OUT_OF_MEMORY') {
+          validRecs.push({ model, quantization: quant, tier: 3, tokensPerSecond: result.estimatedTokensPerSecond || 0 });
         }
       }
     }
@@ -140,7 +142,7 @@ export const AutoRecommender: React.FC<AutoRecommenderProps> = ({ baseHardware }
         <h3 className="text-xl font-bold text-slate-800 dark:text-white">Optimal Models For Your Rig</h3>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {recommendations.map((rec, idx) => (
           <Card key={idx} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-800 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900/80">
             {/* Rank Badge */}
@@ -177,9 +179,9 @@ export const AutoRecommender: React.FC<AutoRecommenderProps> = ({ baseHardware }
               </div>
 
               <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${rec.tier === 1 ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                <span className={`w-2 h-2 rounded-full ${rec.tier === 1 ? 'bg-emerald-500' : rec.tier === 2 ? 'bg-amber-500' : 'bg-red-500'}`} />
                 <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                  {rec.tier === 1 ? '100% VRAM Fit (Fast)' : 'System RAM Offload (Slow)'}
+                  {rec.tier === 1 ? '100% VRAM Fit (Fast)' : rec.tier === 2 ? 'System RAM Offload (Slow)' : 'Out of Memory (Fails)'}
                 </span>
               </div>
             </div>
