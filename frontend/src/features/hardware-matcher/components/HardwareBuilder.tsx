@@ -107,7 +107,7 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   }
 
   return (
-    <Card className="p-6 flex flex-col">
+    <Card className="p-6 flex flex-col" overflowHidden={false}>
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-bold text-slate-900 dark:text-white">My Hardware</h3>
         

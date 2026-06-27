@@ -153,9 +153,9 @@ const CalculatorTabs: React.FC = () => {
               </div>
               <div className="space-y-6">
                 <VRAMBarGraph result={hwResult} />
+                <AutoRecommender baseHardware={hwRequest} />
               </div>
             </div>
-            <AutoRecommender baseHardware={hwRequest} />
           </motion.div>
         ) : (
           <motion.div 
