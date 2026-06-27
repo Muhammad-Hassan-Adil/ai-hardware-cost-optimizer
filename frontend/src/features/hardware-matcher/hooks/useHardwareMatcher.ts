@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { HardwareMatchRequest, HardwareMatchResult, HardwareItem } from '../utils/memoryMath';
 import { calculateHardwareMatch, aggregateHardware } from '../utils/memoryMath';
 
@@ -17,15 +17,10 @@ export const useHardwareMatcher = () => {
     targetSequenceLength: 4096
   });
 
-  const [result, setResult] = useState<HardwareMatchResult | null>(null);
-
   // Computed aggregated request passed to down-stream components
-  const request = aggregateHardware(hardwareItems, baseRequest);
+  const request = useMemo(() => aggregateHardware(hardwareItems, baseRequest), [hardwareItems, baseRequest]);
 
-  useEffect(() => {
-    const res = calculateHardwareMatch(request);
-    setResult(res);
-  }, [request]);
+  const result = useMemo(() => calculateHardwareMatch(request), [request]);
 
   const updateRequest = (updates: Partial<HardwareMatchRequest>) => {
     setBaseRequest(prev => ({ ...prev, ...updates }));
