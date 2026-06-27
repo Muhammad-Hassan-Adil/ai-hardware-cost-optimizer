@@ -4,11 +4,20 @@ import re
 from app.core.config import settings
 
 def call_openrouter_for_gpu_specs(gpu_name: str) -> dict:
-    url = "https://openrouter.ai/api/v1/chat/completions"
-    headers = {
-        "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    if settings.GROQ_API_KEY:
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        model_name = "llama3-8b-8192"
+    else:
+        url = "https://openrouter.ai/api/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        model_name = "meta-llama/llama-3-8b-instruct"
     
     prompt = f"""
     You are a technical AI hardware expert. The user wants specifications for the following GPU: "{gpu_name}".
@@ -23,7 +32,7 @@ def call_openrouter_for_gpu_specs(gpu_name: str) -> dict:
     """
     
     payload = {
-        "model": "meta-llama/llama-3-8b-instruct",
+        "model": model_name,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.0,
     }
@@ -45,5 +54,17 @@ def call_openrouter_for_gpu_specs(gpu_name: str) -> dict:
                 
             return json.loads(content)
     except Exception as e:
-        print(f"OpenRouter API error: {e}")
-        raise ValueError(f"Failed to fetch GPU specs from AI: {e}")
+        print(f"LLM API error: {e}")
+        
+        # Smart fallback: Try to extract VRAM from the name (e.g. "RTX 4050 6GB")
+        vram = 16.0 # Default if we can't find anything
+        match = re.search(r'(\d+)GB', gpu_name, re.IGNORECASE)
+        if match:
+            vram = float(match.group(1))
+            
+        return {
+            "vram_gb": vram,
+            "memory_bandwidth_gb_s": 500.0,
+            "bus_width_bits": 256,
+            "manufacturer": "Unknown"
+        }

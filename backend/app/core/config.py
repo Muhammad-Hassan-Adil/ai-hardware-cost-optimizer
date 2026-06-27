@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     # OpenRouter API Key (for backend script sync)
     OPENROUTER_API_KEY: str | None = None
+    
+    # Groq API Key (alternative LLM fetcher)
+    GROQ_API_KEY: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",
