@@ -51,7 +51,7 @@ If image count is > 0, you must include a "vision" subtask and set vision_requir
         "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: import.meta.env.VITE_GROQ_MODEL ?? "qwen/qwen3-32b",
+        model: import.meta.env.VITE_GROQ_MODEL ?? "llama3-8b-8192",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: prompt }
