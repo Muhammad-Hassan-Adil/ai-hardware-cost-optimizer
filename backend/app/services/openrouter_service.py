@@ -1,5 +1,6 @@
 import json
 import httpx
+import re
 from app.core.config import settings
 
 def call_openrouter_for_gpu_specs(gpu_name: str) -> dict:
@@ -36,13 +37,13 @@ def call_openrouter_for_gpu_specs(gpu_name: str) -> dict:
             
             # Clean up the response if the LLM still returns markdown blocks
             content = content.replace("```json", "").replace("```", "").strip()
+            
+            # Try to extract just the JSON object if there's surrounding text
+            match = re.search(r'\{[\s\S]*\}', content)
+            if match:
+                content = match.group(0)
+                
             return json.loads(content)
     except Exception as e:
         print(f"OpenRouter API error: {e}")
-        # Return fallback on error
-        return {
-            "vram_gb": 16.0,
-            "memory_bandwidth_gb_s": 500.0,
-            "bus_width_bits": 256,
-            "manufacturer": "Unknown"
-        }
+        raise ValueError(f"Failed to fetch GPU specs from AI: {e}")
