@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CloudModel } from '../../../types/database.types';
+import { supabase } from '../../../services/supabaseClient';
 
 export const useCostCalculator = () => {
   const [models, setModels] = useState<CloudModel[]>([]);
@@ -10,10 +11,24 @@ export const useCostCalculator = () => {
   const [completionTokens, setCompletionTokens] = useState(500);
   const [providerFilter, setProviderFilter] = useState<string>('all');
   
-  // Since we don't have a direct endpoint for just cloud models yet, 
-  // wait, the project plan says to fetch from Supabase REST directly or via backend.
-  // For now, let's assume we can fetch via Supabase client.
-  
+  useEffect(() => {
+    const fetchModels = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('cloud_models')
+        .select('*, cloud_providers!inner(slug, name)')
+        .eq('is_active', true)
+        .order('prompt_price_per_1m_usd', { ascending: true });
+        
+      if (!error && data) {
+        setModels(data as any[]);
+      } else if (error) {
+        setError(error.message);
+      }
+      setLoading(false);
+    };
+    fetchModels();
+  }, []);
   // We'll expose state to the component
   return {
     models,

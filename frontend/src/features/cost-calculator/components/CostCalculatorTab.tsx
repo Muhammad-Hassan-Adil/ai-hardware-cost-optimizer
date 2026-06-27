@@ -4,16 +4,13 @@ import { PromptDecomposer } from './PromptDecomposer';
 import { CostModifiers, type CostModifiersState } from './CostModifiers';
 import { ModelCostBreakdown } from './ModelCostBreakdown';
 import { SmartRouting } from './SmartRouting';
-import { PricingTable } from './PricingTable';
 import { ProviderFilter } from './ProviderFilter';
 import type { ImageResolution } from '../utils/tokenizer_service';
 import type { PromptAnalysisResult } from '../utils/analyzer_service';
 
 export const CostCalculatorTab: React.FC = () => {
   const { 
-    models, setModels, loading, setLoading, 
-    promptTokens, 
-    completionTokens,
+    models, loading,
     providerFilter, setProviderFilter
   } = useCostCalculator();
 
@@ -79,21 +76,6 @@ export const CostCalculatorTab: React.FC = () => {
         />
       )}
 
-      {/* 5. Old Pricing Table as Reference */}
-      <div className="pt-12 mt-12 border-t border-slate-200 dark:border-slate-800 space-y-6">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Reference Pricing Table</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">
-            Complete list of all available models and their raw per-1M token costs.
-          </p>
-        </div>
-        <PricingTable 
-          models={models} setModels={setModels}
-          loading={loading} setLoading={setLoading}
-          promptTokens={promptTokens} completionTokens={completionTokens}
-          providerFilter={providerFilter}
-        />
-      </div>
     </div>
   );
 };
