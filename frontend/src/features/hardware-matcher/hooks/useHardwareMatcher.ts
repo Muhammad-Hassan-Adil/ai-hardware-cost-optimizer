@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { HardwareMatchRequest, HardwareMatchResult, HardwareItem } from '../utils/memoryMath';
+import type { HardwareMatchRequest, HardwareItem } from '../utils/memoryMath';
 import { calculateHardwareMatch, aggregateHardware } from '../utils/memoryMath';
 
 export const useHardwareMatcher = () => {

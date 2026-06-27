@@ -26,6 +26,7 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   const [fetchName, setFetchName] = useState('');
   const [isFetching, setIsFetching] = useState(false);
   const [dbGpus, setDbGpus] = useState<GPU[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   React.useEffect(() => {
     api.getGPUs().then(setDbGpus).catch(console.error);
@@ -59,13 +60,22 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
     
     try {
       const data = await api.fetchExternalGpu(fetchName.trim());
+      const newGpu: GPU = {
+        id: `fetched-${Date.now()}`,
+        name: data.name || fetchName,
+        vram_gb: data.vram_gb,
+        memory_bandwidth_gb_s: data.memory_bandwidth_gb_s
+      } as GPU;
+      
       addHardwareItem({
         id: `gpu-fetched-${Date.now()}`,
         type: 'gpu',
-        name: data.name || fetchName,
-        vramGb: data.vram_gb,
-        bandwidthGbps: data.memory_bandwidth_gb_s
+        name: newGpu.name,
+        vramGb: newGpu.vram_gb,
+        bandwidthGbps: newGpu.memory_bandwidth_gb_s
       });
+      
+      setDbGpus(prev => [newGpu, ...prev]);
     } catch (e) {
       console.error(e);
       alert("Error fetching GPU specs.");
@@ -110,9 +120,19 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
           </button>
           
           {showAddMenu && (
-            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-20">
+            <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-20 flex flex-col">
+              <div className="p-2 border-b border-slate-100 dark:border-slate-700/50">
+                <input 
+                  type="text"
+                  autoFocus
+                  placeholder="Search GPUs..."
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
               <div className="max-h-48 overflow-y-auto custom-scrollbar">
-                {dbGpus.map(gpu => (
+                {dbGpus.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())).map(gpu => (
                   <button 
                     key={gpu.id}
                     onClick={() => {

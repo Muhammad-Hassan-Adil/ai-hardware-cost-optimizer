@@ -150,11 +150,9 @@ const CalculatorTabs: React.FC = () => {
                   removeHardwareItem={removeHardwareItem}
                   totalVram={hwRequest.gpuVramGb}
                 />
-                <ModelSelector request={hwRequest} updateRequest={updateHwRequest} />
               </div>
               <div className="space-y-6">
                 <VRAMBarGraph result={hwResult} />
-                <PerformanceEstimator result={hwResult} />
               </div>
             </div>
             <AutoRecommender baseHardware={hwRequest} />
