@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAppStore } from '../store/appStore';
 import { ArrowRight, Cpu, Server, Calculator, CheckCircle2 } from 'lucide-react';
 import { calculateHardwareMatch } from '../features/hardware-matcher/utils/memoryMath';
 import { useQuery } from '@tanstack/react-query';
@@ -10,12 +9,6 @@ import { Helmet } from 'react-helmet-async';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { setActiveTab } = useAppStore();
-
-  const handleNavigate = (tab: string, path: string) => {
-    setActiveTab(tab);
-    navigate(path);
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,14 +43,24 @@ export const HomePage: React.FC = () => {
       const { data, error } = await supabase.from('cloud_models').select('*').limit(3);
       if (error) throw error;
       return data;
-    }
+    },
+    enabled: typeof window !== 'undefined'
   });
 
   return (
     <div className="flex flex-col gap-24 pb-24">
       <Helmet>
-        <title>GPURunner | AI Hardware & Cost Optimizer</title>
+        <title>GPURunner — AI Hardware & Cloud Cost Optimizer</title>
         <meta name="description" content="The ultimate toolkit for AI engineers. Calculate VRAM requirements, build local rigs, and compare cloud API pricing." />
+        <link rel="canonical" href="https://gpurunner.com/" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "GPURunner — AI Hardware & Cloud Cost Optimizer",
+          "url": "https://gpurunner.com/",
+          "description": "The ultimate toolkit for AI engineers. Calculate VRAM requirements, build local rigs, and compare cloud API pricing.",
+          "applicationCategory": "DeveloperApplication"
+        })}</script>
       </Helmet>
 
       {/* Hero Section */}
@@ -83,14 +86,14 @@ export const HomePage: React.FC = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
               <button
-                onClick={() => handleNavigate('matcher', '/?tab=matcher')}
+                onClick={() => navigate('/hardware-analyzer')}
                 className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg shadow-brand-500/25 transition-all flex items-center gap-2 group"
               >
                 Analyze Hardware
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button
-                onClick={() => handleNavigate('cloud', '/?tab=cloud')}
+                onClick={() => navigate('/cloud-pricing')}
                 className="px-8 py-4 bg-white dark:bg-surface-800 text-slate-800 dark:text-white border border-slate-200 dark:border-surface-700 hover:border-brand-500 dark:hover:border-brand-500 rounded-xl font-semibold transition-all shadow-sm"
               >
                 Compare Cloud Costs
@@ -115,7 +118,7 @@ export const HomePage: React.FC = () => {
           className="grid md:grid-cols-3 gap-8"
         >
           {/* Tool Card 1 */}
-          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => handleNavigate('matcher', '/?tab=matcher')}>
+          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => navigate('/hardware-analyzer')}>
             <div className="w-14 h-14 bg-brand-50 dark:bg-brand-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Cpu className="text-brand-600 dark:text-brand-400" size={28} />
             </div>
@@ -144,7 +147,7 @@ export const HomePage: React.FC = () => {
           </motion.div>
 
           {/* Tool Card 2 */}
-          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => handleNavigate('builder', '/?tab=builder')}>
+          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => navigate('/rig-configurator')}>
             <div className="w-14 h-14 bg-purple-50 dark:bg-purple-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Server className="text-purple-600 dark:text-purple-400" size={28} />
             </div>
@@ -169,7 +172,7 @@ export const HomePage: React.FC = () => {
           </motion.div>
 
           {/* Tool Card 3 */}
-          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => handleNavigate('cloud', '/?tab=cloud')}>
+          <motion.div variants={itemVariants} className="bg-white dark:bg-surface-800 p-8 rounded-2xl border border-slate-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all cursor-pointer group" onClick={() => navigate('/cloud-pricing')}>
             <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Calculator className="text-emerald-600 dark:text-emerald-400" size={28} />
             </div>
@@ -226,14 +229,14 @@ export const HomePage: React.FC = () => {
           <h2 className="text-3xl font-bold mb-6">Ready to optimize your AI infrastructure?</h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button 
-              onClick={() => handleNavigate('matcher', '/?tab=matcher')}
+              onClick={() => navigate('/hardware-analyzer')}
               className="px-8 py-3 bg-white text-brand-700 hover:bg-slate-50 rounded-xl font-semibold transition-colors flex justify-center items-center gap-2"
             >
               <CheckCircle2 size={18} />
               Start Sizing Models
             </button>
             <button 
-              onClick={() => handleNavigate('cloud', '/?tab=cloud')}
+              onClick={() => navigate('/cloud-pricing')}
               className="px-8 py-3 bg-brand-700/50 hover:bg-brand-800/50 text-white border border-brand-400/30 rounded-xl font-semibold transition-colors flex justify-center items-center gap-2"
             >
               Compare API Prices

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Moon, Sun, ChevronDown, Lock } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Moon, Sun, ChevronDown } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,33 +8,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navData = {
   matcher: {
     title: 'Hardware Analyzer',
-    landing: '?tab=matcher',
+    landing: '/hardware-analyzer',
     items: [
-      { label: 'Analyze Compatibility', href: '?tab=matcher-tool', icon: '🔍' },
-      { label: 'Find Bottlenecks', href: '?tab=matcher-tool&tool=bottleneck', icon: '🔥', soon: true },
-      { label: 'Upgrade Path Planner', href: '?tab=matcher-tool&tool=upgrade', icon: '📈', soon: true },
-      { label: 'Inference Speed', href: '?tab=matcher-tool&tool=speed', icon: '⚡', soon: true },
+      { label: 'Analyze Compatibility', href: '/hardware-analyzer/tool', icon: '🔍' },
+      { label: 'Find Bottlenecks', href: '/hardware-analyzer/bottleneck', icon: '🔥' },
+      { label: 'Upgrade Path Planner', href: '/hardware-analyzer/upgrade', icon: '📈' },
+      { label: 'Inference Speed', href: '/hardware-analyzer/speed', icon: '⚡' },
     ]
   },
   builder: {
     title: 'Rig Configurator',
-    landing: '?tab=builder',
+    landing: '/rig-configurator',
     items: [
-      { label: 'Build Your Rig', href: '?tab=builder-tool', icon: '🔧' },
-      { label: 'Power & Cost', href: '?tab=builder-tool&tool=power', icon: '⚡', soon: true },
-      { label: 'PCIe Bandwidth', href: '?tab=builder-tool&tool=pcie', icon: '🔌', soon: true },
-      { label: 'Share Config', href: '?tab=builder-tool&tool=share', icon: '🔗', soon: true },
+      { label: 'Build Your Rig', href: '/rig-configurator/tool', icon: '🔧' },
+      { label: 'Power & Cost', href: '/rig-configurator/power', icon: '⚡' },
+      { label: 'PCIe Bandwidth', href: '/rig-configurator/pcie', icon: '🔌' },
+      { label: 'Share Config', href: '/rig-configurator/share', icon: '🔗' },
     ]
   },
   cloud: {
     title: 'Cloud Pricing',
-    landing: '?tab=cloud',
+    landing: '/cloud-pricing',
     items: [
-      { label: 'API Cost Calculator', href: '?tab=cloud-tool', icon: '💰' },
-      { label: 'Compare Models', href: '?tab=cloud-tool&tool=compare', icon: '📊', soon: true },
-      { label: 'Price History', href: '?tab=cloud-tool&tool=history', icon: '📉', soon: true },
-      { label: 'Budget Calculator', href: '?tab=cloud-tool&tool=budget', icon: '🧮', soon: true },
-      { label: 'Batch vs Realtime', href: '?tab=cloud-tool&tool=batch', icon: '⚡', soon: true },
+      { label: 'API Cost Calculator', href: '/cloud-pricing/tool', icon: '💰' },
+      { label: 'Compare Models', href: '/cloud-pricing/compare', icon: '📊' },
+      { label: 'Price History', href: '/cloud-pricing/history', icon: '📉' },
+      { label: 'Budget Calculator', href: '/cloud-pricing/budget', icon: '🧮' },
+      { label: 'Batch vs Realtime', href: '/cloud-pricing/batch', icon: '⚡' },
     ]
   }
 };
@@ -42,9 +42,9 @@ const navData = {
 type TabKey = keyof typeof navData;
 
 export const Navbar: React.FC = () => {
-  const [isDark, setIsDark] = useState(true);
+  const { isDark, setIsDark } = useAppStore();
   const navigate = useNavigate();
-  const { activeTab, setActiveTab } = useAppStore();
+  const location = useLocation();
   
   const [hoveredTab, setHoveredTab] = useState<TabKey | null>(null);
   const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -80,22 +80,23 @@ export const Navbar: React.FC = () => {
   };
 
   const handleTabClick = (tabKey: TabKey) => {
-    setActiveTab(tabKey);
     navigate(navData[tabKey].landing);
     setHoveredTab(null);
   };
 
-  const handleItemClick = (href: string, isSoon: boolean) => {
-    if (isSoon) return;
-    
-    // Parse href to extract tab (e.g., ?tab=matcher-tool)
-    const urlParams = new URLSearchParams(href.split('?')[1]);
-    const tabParam = urlParams.get('tab');
-    if (tabParam) {
-      setActiveTab(tabParam);
-    }
+  const handleItemClick = (href: string) => {
     navigate(href);
     setHoveredTab(null);
+  };
+
+  // Determine active main tab for mobile select
+  const getActiveTabKey = () => {
+    if (location.pathname === '/') return 'home';
+    if (location.pathname.startsWith('/hardware-analyzer')) return 'matcher';
+    if (location.pathname.startsWith('/rig-configurator')) return 'builder';
+    if (location.pathname.startsWith('/cloud-pricing')) return 'cloud';
+    if (location.pathname.startsWith('/benchmarks')) return 'benchmarks';
+    return 'home';
   };
 
   return (
@@ -103,7 +104,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <div 
           className="flex-shrink-0 cursor-pointer"
-          onClick={() => { setActiveTab('home'); navigate('/?tab=home'); }}
+          onClick={() => { navigate('/'); }}
         >
           <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-brand-500 transition-colors flex items-center gap-2">
             <span className="text-xl">⚡</span> GPURunner
@@ -114,7 +115,7 @@ export const Navbar: React.FC = () => {
           <nav className="hidden md:flex items-center gap-1" onMouseLeave={handleMouseLeave}>
             {(Object.keys(navData) as TabKey[]).map((key) => {
               const tabInfo = navData[key];
-              const isActive = activeTab.startsWith(key);
+              const isActive = location.pathname.startsWith(tabInfo.landing);
               const isHovered = hoveredTab === key;
               
               return (
@@ -155,18 +156,13 @@ export const Navbar: React.FC = () => {
                           {tabInfo.items.map((item, idx) => (
                             <button
                               key={idx}
-                              onClick={() => handleItemClick(item.href, !!item.soon)}
-                              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors flex items-center justify-between group ${item.soon ? 'opacity-60 cursor-not-allowed' : 'hover:bg-slate-100 dark:hover:bg-surface-700 cursor-pointer'}`}
+                              onClick={() => handleItemClick(item.href)}
+                              className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-surface-700 cursor-pointer"
                             >
                               <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">
                                 <span>{item.icon}</span>
                                 {item.label}
                               </span>
-                              {item.soon && (
-                                <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-surface-900 px-1.5 py-0.5 rounded">
-                                  <Lock size={10} /> Soon
-                                </span>
-                              )}
                             </button>
                           ))}
                         </div>
@@ -176,15 +172,34 @@ export const Navbar: React.FC = () => {
                 </div>
               );
             })}
+
+            {/* Benchmarks Tab (No Dropdown) */}
+            <div className="relative">
+              <button 
+                onClick={() => {
+                  navigate('/benchmarks');
+                }}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-1 ${location.pathname.startsWith('/benchmarks') ? 'text-brand-500' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}`}
+              >
+                Benchmarks
+                {location.pathname.startsWith('/benchmarks') && (
+                  <motion.div 
+                    layoutId="activeTabIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-500 rounded-t-md" 
+                  />
+                )}
+              </button>
+            </div>
           </nav>
 
           <div className="md:hidden flex items-center gap-2">
              <select 
-               value={activeTab.split('-')[0]}
+               value={getActiveTabKey()}
                onChange={(e) => {
-                 const tab = e.target.value as TabKey | 'home';
-                 setActiveTab(tab);
-                 navigate(tab === 'home' ? '/?tab=home' : navData[tab as TabKey].landing);
+                 const val = e.target.value;
+                 if (val === 'home') navigate('/');
+                 else if (val === 'benchmarks') navigate('/benchmarks');
+                 else navigate(navData[val as TabKey].landing);
                }}
                className="text-sm bg-transparent border border-slate-200 dark:border-slate-700 rounded-md p-1.5 text-slate-700 dark:text-slate-300"
              >
@@ -192,6 +207,7 @@ export const Navbar: React.FC = () => {
                <option value="matcher">Analyzer</option>
                <option value="builder">Configurator</option>
                <option value="cloud">Cloud</option>
+               <option value="benchmarks">Benchmarks</option>
              </select>
           </div>
 

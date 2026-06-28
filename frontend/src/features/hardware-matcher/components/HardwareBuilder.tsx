@@ -32,7 +32,8 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
 
   const { data: dbGpus = [] } = useQuery({
     queryKey: ['gpus'],
-    queryFn: () => api.getGPUs()
+    queryFn: () => api.getGPUs(),
+    enabled: typeof window !== 'undefined'
   });
 
   const handleAddGpu = () => {

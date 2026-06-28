@@ -1,17 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAppStore } from '../store/appStore';
-import { Server, Wrench, Zap, Link, Lock } from 'lucide-react';
+import { Server, Wrench, Zap, Link } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 export const RigConfiguratorLanding: React.FC = () => {
   const navigate = useNavigate();
-  const { setActiveTab } = useAppStore();
 
-  const handleLaunch = () => {
-    setActiveTab('builder-tool');
-    navigate('/?tab=builder-tool');
+  const handleLaunch = (tool?: string) => {
+    navigate(tool ? `/rig-configurator/${tool}` : '/rig-configurator/tool');
   };
 
   const features = [
@@ -20,27 +17,38 @@ export const RigConfiguratorLanding: React.FC = () => {
       desc: 'Mix and match GPUs in a visual builder to see your total VRAM pool and cost.',
       icon: <Wrench className="text-purple-500" size={24} />,
       active: true,
-      action: handleLaunch
+      action: () => handleLaunch()
     },
     {
       title: 'Power & Cost',
       desc: 'Estimate wattage requirements and electricity costs for 24/7 inference.',
       icon: <Zap className="text-yellow-500" size={24} />,
-      active: false
+      active: true,
+      action: () => handleLaunch('power')
     },
     {
       title: 'Share Config',
       desc: 'Generate a unique link to share your planned rig with others for feedback.',
       icon: <Link className="text-blue-500" size={24} />,
-      active: false
+      active: true,
+      action: () => handleLaunch('share')
     }
   ];
 
   return (
     <div className="max-w-5xl mx-auto space-y-16 py-8">
       <Helmet>
-        <title>Rig Configurator | GPURunner</title>
+        <title>Rig Configurator — Build Your AI Workstation | GPURunner</title>
         <meta name="description" content="Plan your multi-GPU setup. Optimize for PCIe lanes, power delivery, and total cost of ownership." />
+        <link rel="canonical" href="https://gpurunner.com/rig-configurator" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Rig Configurator",
+          "url": "https://gpurunner.com/rig-configurator",
+          "description": "Plan your multi-GPU setup. Optimize for PCIe lanes, power delivery, and total cost of ownership.",
+          "applicationCategory": "DeveloperApplication"
+        })}</script>
       </Helmet>
       <div className="text-center space-y-6">
         <div className="w-20 h-20 bg-purple-50 dark:bg-purple-500/10 rounded-2xl flex items-center justify-center mx-auto">
@@ -51,7 +59,7 @@ export const RigConfiguratorLanding: React.FC = () => {
           Plan your multi-GPU setup. Optimize for PCIe lanes, power delivery, and total cost of ownership.
         </p>
         <button 
-          onClick={handleLaunch}
+          onClick={() => handleLaunch()}
           className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/25 transition-all"
         >
           Launch Tool
@@ -68,11 +76,6 @@ export const RigConfiguratorLanding: React.FC = () => {
             onClick={f.active ? f.action : undefined}
             className={`p-6 rounded-2xl border ${f.active ? 'bg-white dark:bg-surface-800 border-slate-200 dark:border-surface-700 hover:border-purple-500 hover:shadow-lg cursor-pointer' : 'bg-slate-50 dark:bg-surface-900 border-slate-100 dark:border-surface-800 opacity-60'} transition-all relative`}
           >
-            {!f.active && (
-              <div className="absolute top-4 right-4 flex items-center gap-1 text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 bg-slate-200 dark:bg-surface-800 px-2 py-1 rounded">
-                <Lock size={12} /> Coming Soon
-              </div>
-            )}
             <div className="mb-4">{f.icon}</div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{f.title}</h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">{f.desc}</p>

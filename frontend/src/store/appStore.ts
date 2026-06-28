@@ -1,11 +1,17 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface AppStore {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  isDark: boolean;
+  setIsDark: (dark: boolean) => void;
 }
 
-export const useAppStore = create<AppStore>((set) => ({
-  activeTab: 'home',
-  setActiveTab: (tab) => set({ activeTab: tab }),
-}));
+export const useAppStore = create<AppStore>()(
+  persist(
+    (set) => ({
+      isDark: true,
+      setIsDark: (dark) => set({ isDark: dark }),
+    }),
+    { name: 'gpurunner-ui' }
+  )
+);

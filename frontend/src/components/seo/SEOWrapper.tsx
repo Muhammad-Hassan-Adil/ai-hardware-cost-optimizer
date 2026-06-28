@@ -10,7 +10,7 @@ export const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     if (slug) {
       // In a real scenario, this fetches from the backend resolve endpoint
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ai-hardware-cost-optimizer.onrender.com/api/v1';
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://gpurunner-api.leonmaverik2.workers.dev/api/v1';
       fetch(`${API_BASE_URL}/seo/resolve/${slug}`)
         .then(res => {
           if (res.ok) return res.json();
