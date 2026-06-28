@@ -1,35 +1,42 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import type { CloudModel } from '../../../types/database.types';
-import type { PromptAnalysisResult } from '../utils/analyzer_service';
 import type { CostModifiersState } from './CostModifiers';
-import { estimateTextTokens, estimateImageTokens, type ImageResolution } from '../utils/tokenizer_service';
 import { Card } from '../../../components/common/Card';
 import { Info } from 'lucide-react';
 
-interface ModelCostBreakdownProps {
+interface PricingTableProps {
   models: CloudModel[];
-  prompt: string;
-  imageCount: number;
-  imageResolution: ImageResolution;
+  promptTokens: number;
+  completionTokens: number;
   modifiers: CostModifiersState;
-  analysis: PromptAnalysisResult | null;
   providerFilter: string;
+  searchQuery: string;
 }
 
-export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
-  models, prompt, imageCount, imageResolution, modifiers, analysis, providerFilter
+export const PricingTable: React.FC<PricingTableProps> = ({
+  models, promptTokens, completionTokens, modifiers, providerFilter, searchQuery
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [providerFilter, prompt, imageCount, imageResolution, modifiers, analysis]);
+  }, [providerFilter, promptTokens, completionTokens, modifiers, searchQuery]);
 
   const { groupedModels, totalModels } = useMemo(() => {
     let filtered = models.filter(m => m.is_active);
+    
     if (providerFilter !== 'all') {
       filtered = filtered.filter(m => (m as any).cloud_providers?.slug === providerFilter);
+    }
+    
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(m => {
+        const nameMatch = m.friendly_name ? m.friendly_name.toLowerCase().includes(q) : false;
+        const idMatch = m.openrouter_id ? m.openrouter_id.toLowerCase().includes(q) : false;
+        return nameMatch || idMatch;
+      });
     }
 
     const calculated = filtered.map(model => {
@@ -39,11 +46,9 @@ export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
       const isAnthropic = providerSlug.includes('anthropic');
       const isApprox = isAnthropic || providerSlug.includes('google') || providerSlug.includes('gemini');
       
-      const textTokens = estimateTextTokens(prompt, providerSlug);
-      const imageTokens = estimateImageTokens(imageCount, imageResolution, providerSlug);
-      const totalInputTokens = textTokens + imageTokens;
+      const totalInputTokens = promptTokens;
       
-      let outputTokens = analysis ? analysis.total_output_tokens : 0;
+      let outputTokens = completionTokens;
       if (modifiers.extendedThinking) {
         outputTokens *= 4; // 4x multiplier for reasoning
       }
@@ -74,8 +79,6 @@ export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
         providerSlug,
         providerName,
         isApprox,
-        textTokens,
-        imageTokens,
         totalInputTokens,
         outputTokens,
         inputCost,
@@ -98,7 +101,7 @@ export const ModelCostBreakdown: React.FC<ModelCostBreakdownProps> = ({
     });
 
     return { groupedModels: grouped, totalModels };
-  }, [models, prompt, imageCount, imageResolution, modifiers, analysis, providerFilter, currentPage]);
+  }, [models, promptTokens, completionTokens, modifiers, providerFilter, currentPage, searchQuery]);
 
   const totalPages = Math.ceil(totalModels / itemsPerPage);
 

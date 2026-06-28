@@ -12,7 +12,7 @@ export const About: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="max-w-4xl mx-auto p-6 space-y-6 text-slate-700 dark:text-slate-300"
     >
-      <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium cursor-pointer">
+      <button onClick={() => navigate('/')} className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium cursor-pointer">
         <ArrowLeft size={18} /> Back
       </button>
       
