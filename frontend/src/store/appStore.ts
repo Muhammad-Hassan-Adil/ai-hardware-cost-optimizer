@@ -6,6 +6,6 @@ interface AppStore {
 }
 
 export const useAppStore = create<AppStore>((set) => ({
-  activeTab: 'matcher',
+  activeTab: 'home',
   setActiveTab: (tab) => set({ activeTab: tab }),
 }));
