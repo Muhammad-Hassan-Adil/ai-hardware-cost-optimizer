@@ -20,7 +20,7 @@ export const About: React.FC = () => {
       
       <div className="space-y-4 bg-white dark:bg-slate-900/40 p-8 rounded-2xl backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <p>
-          Welcome to the <strong>AI Hardware & Cost Optimizer Hub</strong>. Our mission is to demystify the hardware requirements 
+          Welcome to the <strong>GPURunner</strong>. Our mission is to demystify the hardware requirements 
           for running Large Language Models (LLMs) locally, and to provide transparent, dynamic cost comparisons for running those 
           models in the cloud.
         </p>

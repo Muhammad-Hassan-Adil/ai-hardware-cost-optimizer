@@ -10,7 +10,8 @@ export const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     if (slug) {
       // In a real scenario, this fetches from the backend resolve endpoint
-      fetch(`http://127.0.0.1:8000/api/v1/seo/resolve/${slug}`)
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ai-hardware-cost-optimizer.onrender.com/api/v1';
+      fetch(`${API_BASE_URL}/seo/resolve/${slug}`)
         .then(res => {
           if (res.ok) return res.json();
           return null;
@@ -32,7 +33,7 @@ export const SEOWrapper: React.FC<{ children: React.ReactNode }> = ({ children }
       ) : (
         <JSONLDMetadata 
           type="WebPage" 
-          name="AI Hardware & Cost Optimizer Hub" 
+          name="GPURunner" 
           description="Optimize AI hardware memory fit and calculate API costs for local and cloud models."
         />
       )}

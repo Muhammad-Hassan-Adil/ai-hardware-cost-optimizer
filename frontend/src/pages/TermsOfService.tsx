@@ -21,7 +21,7 @@ export const TermsOfService: React.FC = () => {
         <p className="text-sm text-slate-500">Last Updated: {new Date().toLocaleDateString()}</p>
         
         <p>
-          Welcome to the AI Hardware & Cost Optimizer Hub.
+          Welcome to the GPURunner.
         </p>
         <p>
           By accessing this website, we assume you accept these terms and conditions. Do not continue to use the website 

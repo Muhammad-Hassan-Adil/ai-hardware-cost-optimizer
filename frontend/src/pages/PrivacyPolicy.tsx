@@ -21,7 +21,7 @@ export const PrivacyPolicy: React.FC = () => {
         <p className="text-sm text-slate-500">Last Updated: {new Date().toLocaleDateString()}</p>
         
         <p>
-          At the AI Hardware & Cost Optimizer Hub, accessible from our website, one of our main priorities is the privacy of our visitors. 
+          At the GPURunner, accessible from our website, one of our main priorities is the privacy of our visitors. 
           This Privacy Policy document contains types of information that is collected and recorded by us and how we use it.
         </p>
 

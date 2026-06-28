@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SEOWrapper } from './components/seo/SEOWrapper';
 import { Moon, Sun } from 'lucide-react';
 import { Footer } from './components/common/Footer';
+import { useAppStore } from './store/appStore';
 
 // Pages
 import { About } from './pages/About';
@@ -36,7 +37,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const currentTab = searchParams.get('tab') || 'matcher';
+  const { activeTab, setActiveTab } = useAppStore();
+
+  // Sync URL to state initially, or if URL changes
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && tabParam !== activeTab) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams, activeTab, setActiveTab]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
@@ -44,29 +53,29 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <Link to="/" className="flex-shrink-0">
             <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-              AI Hardware & Cost Optimizer Hub
+              GPURunner
             </h1>
           </Link>
 
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex items-center p-1 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
               <button 
-                onClick={() => navigate('/?tab=matcher')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'matcher' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                onClick={() => { setActiveTab('matcher'); navigate('/?tab=matcher'); }}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'matcher' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
-                Local Hardware Matcher
+                Hardware Analyzer
               </button>
               <button 
-                onClick={() => navigate('/?tab=builder')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'builder' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                onClick={() => { setActiveTab('builder'); navigate('/?tab=builder'); }}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'builder' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
-                Hardware Builder
+                Rig Configurator
               </button>
               <button 
-                onClick={() => navigate('/?tab=cloud')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${currentTab === 'cloud' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                onClick={() => { setActiveTab('cloud'); navigate('/?tab=cloud'); }}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'cloud' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
               >
-                Cloud Cost Calculator
+                Cloud Pricing
               </button>
             </nav>
 
@@ -91,9 +100,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 const CalculatorTabs: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const tabQuery = searchParams.get('tab') || 'matcher';
-  const activeTab = tabQuery === 'matcher' ? 0 : tabQuery === 'builder' ? 1 : 2;
+  const { activeTab } = useAppStore();
+  const activeTabIndex = activeTab === 'matcher' ? 0 : activeTab === 'builder' ? 1 : 2;
 
   // Tab 1 State
   const { 
@@ -112,7 +120,7 @@ const CalculatorTabs: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <AnimatePresence mode="wait">
-        {activeTab === 0 ? (
+        {activeTabIndex === 0 ? (
           <motion.div 
             key="tab0"
             initial={{ opacity: 0, y: 10 }}
@@ -132,7 +140,7 @@ const CalculatorTabs: React.FC = () => {
               </div>
             </div>
           </motion.div>
-        ) : activeTab === 1 ? (
+        ) : activeTabIndex === 1 ? (
           <motion.div 
             key="tab1"
             initial={{ opacity: 0, y: 10 }}

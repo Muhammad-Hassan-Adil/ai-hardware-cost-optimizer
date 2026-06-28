@@ -4,6 +4,7 @@ import { Slider } from '../../../components/common/Slider';
 import { Plus, X, Cpu, MemoryStick, CloudDownload, Loader2 } from 'lucide-react';
 import type { HardwareItem } from '../utils/memoryMath';
 import { api } from '../../../services/api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { GPU } from '../../../types/database.types';
 
 interface HardwareBuilderProps {
@@ -25,12 +26,14 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
   const [showFetchInput, setShowFetchInput] = useState(false);
   const [fetchName, setFetchName] = useState('');
   const [isFetching, setIsFetching] = useState(false);
-  const [dbGpus, setDbGpus] = useState<GPU[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  const queryClient = useQueryClient();
 
-  React.useEffect(() => {
-    api.getGPUs().then(setDbGpus).catch(console.error);
-  }, []);
+  const { data: dbGpus = [] } = useQuery({
+    queryKey: ['gpus'],
+    queryFn: () => api.getGPUs()
+  });
 
   const handleAddGpu = () => {
     addHardwareItem({
@@ -75,7 +78,10 @@ export const HardwareBuilder: React.FC<HardwareBuilderProps> = ({
         bandwidthGbps: newGpu.memory_bandwidth_gb_s
       });
       
-      setDbGpus(prev => [newGpu, ...prev]);
+      queryClient.setQueryData<GPU[]>(['gpus'], (old) => {
+        if (!old) return [newGpu];
+        return [newGpu, ...old];
+      });
     } catch (e) {
       console.error(e);
       alert("Error fetching GPU specs.");

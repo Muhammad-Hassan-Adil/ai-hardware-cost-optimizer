@@ -36,7 +36,7 @@ frontend/
 ### A. The Global Layout (`App.tsx`)
 * **Header:** Features the site title on the left, and three primary navigation tabs on the right alongside a Dark/Light mode toggle.
 * **Footer:** Contains links to standalone legal pages (About, Privacy Policy, Terms of Service).
-* **Routing:** The main view is dictated by the `?tab=` URL parameter (values: `matcher`, `builder`, `cloud`). Legal pages use standard path routing (e.g., `/about`) and include a functional `useNavigate(-1)` back button.
+* **Routing:** The main view is dictated by the `?tab=` URL parameter (values: `matcher`, `builder`, `cloud`). Legal pages use standard path routing (e.g., `/about`) and explicitly navigate back to the home page (`navigate('/')`) rather than relying on browser history.
 
 ### B. Local Hardware Matcher (`?tab=matcher`)
 * **Purpose:** Allows a user to input their current hardware, budget, and intended usage (e.g., "Heavy Fine-tuning", "Light Inference") to find the best hardware upgrade path.
@@ -56,8 +56,8 @@ frontend/
 * **Purpose:** Calculates the exact API cost for running specific models on cloud providers (e.g., OpenAI, Anthropic, OpenRouter).
 * **Features:**
   * **Supabase Integration:** Fetches live pricing models from a `cloud_models` and `cloud_providers` Supabase database.
-  * **Token Math:** Users input their expected Prompt and Completion tokens. The app instantly updates the "Cost per Request" column.
-  * **Pricing Table (`PricingTable.tsx`):** A responsive, searchable data table displaying the model name, provider, context window, and dynamic cost. It features built-in pagination restricted to exactly 20 rows per page.
+  * **Token Math:** Users can paste a prompt to dynamically estimate token counts locally (`tokenEstimator.ts`), or manually adjust input/output token sliders. The app instantly updates the cost breakdowns.
+  * **Pricing Table (`PricingTable.tsx`):** A responsive data table displaying the model name, provider, context window, and dynamic cost. It features real-time search filtering (by model name or ID) and built-in pagination restricted to exactly 15 rows per page.
 
 ## 4. Key Utilities & Logic
 * **`memoryMath.ts` (Core Engine):** This utility file is critical. It contains the complex logic for evaluating if an LLM can run on a user's hardware. It calculates VRAM requirements based on:
