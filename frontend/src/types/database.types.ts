@@ -7,6 +7,8 @@ export interface GPU {
   bus_width_bits: number;
   tdp_watts?: number;
   manufacturer: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Quantization {
@@ -16,6 +18,7 @@ export interface Quantization {
   bits_per_weight: number;
   file_size_gb: number;
   recommended_vram_gb: number;
+  created_at?: string;
 }
 
 export interface LocalModel {
@@ -27,6 +30,8 @@ export interface LocalModel {
   context_length: number;
   huggingface_repo?: string;
   quantizations: Quantization[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface HardwareMatchRequest {
@@ -60,6 +65,8 @@ export interface CloudModel {
   is_active: boolean;
   supports_vision: boolean;
   tier: "lightweight" | "standard" | "frontier";
+  created_at?: string;
+  last_synced_at?: string;
 }
 
 export interface PromptAnalysis {
@@ -72,4 +79,36 @@ export interface PromptAnalysis {
   total_input_tokens: number;
   total_output_tokens: number;
   confidence: number;
+}
+
+export interface ModelBenchmark {
+  id: string;
+  model_id: string;
+  mmlu: number | null;
+  gsm8k: number | null;
+  human_eval: number | null;
+  created_at: string;
+  cloud_models?: {
+    friendly_name: string;
+    prompt_price_per_1m_usd: number;
+    completion_price_per_1m_usd: number;
+    tier: string;
+  };
+}
+
+export interface PriceHistory {
+  id: string;
+  model_id: string;
+  date: string;
+  prompt_price_per_1m_usd: number;
+  completion_price_per_1m_usd: number;
+  created_at: string;
+}
+
+export interface CloudProvider {
+  id: string;
+  name: string;
+  slug: string;
+  api_base_url: string;
+  created_at: string;
 }

@@ -44,7 +44,7 @@ export const HomePage: React.FC = () => {
       if (error) throw error;
       return data;
     },
-    enabled: typeof window !== 'undefined'
+    enabled: true
   });
 
   return (

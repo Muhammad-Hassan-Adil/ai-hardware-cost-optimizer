@@ -6,28 +6,27 @@ import { Navbar } from './components/common/Navbar';
 
 // Eager load only the homepage and layout
 import { HomePage } from './pages/HomePage';
+import { HardwareAnalyzerLanding } from './pages/HardwareAnalyzerLanding';
+import { RigConfiguratorLanding } from './pages/RigConfiguratorLanding';
+import { CloudPricingLanding } from './pages/CloudPricingLanding';
+import { HardwareAnalyzerTool } from './features/hardware-matcher/components/HardwareAnalyzerTool';
+import { RigConfiguratorTool } from './features/hardware-matcher/components/RigConfiguratorTool';
+import { CostCalculatorTab } from './features/cost-calculator/components/CostCalculatorTab';
+import { BenchmarksTab } from './features/benchmarks/components/BenchmarksTab';
 
 // Lazy load all feature pages
-const HardwareAnalyzerLanding = lazy(() => import('./pages/HardwareAnalyzerLanding').then(m => ({ default: m.HardwareAnalyzerLanding })));
-const HardwareAnalyzerTool = lazy(() => import('./features/hardware-matcher/components/HardwareAnalyzerTool').then(m => ({ default: m.HardwareAnalyzerTool })));
 const BottleneckFinder = lazy(() => import('./features/hardware-matcher/components/BottleneckFinder').then(m => ({ default: m.BottleneckFinder })));
 const UpgradePlanner = lazy(() => import('./features/hardware-matcher/components/UpgradePlanner').then(m => ({ default: m.UpgradePlanner })));
 const InferenceSpeedEstimator = lazy(() => import('./features/hardware-matcher/components/InferenceSpeedEstimator').then(m => ({ default: m.InferenceSpeedEstimator })));
 
-const RigConfiguratorLanding = lazy(() => import('./pages/RigConfiguratorLanding').then(m => ({ default: m.RigConfiguratorLanding })));
-const RigConfiguratorTool = lazy(() => import('./features/hardware-matcher/components/RigConfiguratorTool').then(m => ({ default: m.RigConfiguratorTool })));
 const PowerCostCalculator = lazy(() => import('./features/hardware-matcher/components/PowerCostCalculator').then(m => ({ default: m.PowerCostCalculator })));
 const PCIeBandwidthChecker = lazy(() => import('./features/hardware-matcher/components/PCIeBandwidthChecker').then(m => ({ default: m.PCIeBandwidthChecker })));
 const ShareConfig = lazy(() => import('./features/hardware-matcher/components/ShareConfig').then(m => ({ default: m.ShareConfig })));
 
-const CloudPricingLanding = lazy(() => import('./pages/CloudPricingLanding').then(m => ({ default: m.CloudPricingLanding })));
-const CostCalculatorTab = lazy(() => import('./features/cost-calculator/components/CostCalculatorTab').then(m => ({ default: m.CostCalculatorTab })));
 const ModelComparison = lazy(() => import('./features/cost-calculator/components/ModelComparison').then(m => ({ default: m.ModelComparison })));
 const PriceHistory = lazy(() => import('./features/cost-calculator/components/PriceHistory').then(m => ({ default: m.PriceHistory })));
 const BudgetCalculator = lazy(() => import('./features/cost-calculator/components/BudgetCalculator').then(m => ({ default: m.BudgetCalculator })));
 const BatchVsRealtime = lazy(() => import('./features/cost-calculator/components/BatchVsRealtime').then(m => ({ default: m.BatchVsRealtime })));
-
-const BenchmarksTab = lazy(() => import('./features/benchmarks/components/BenchmarksTab').then(m => ({ default: m.BenchmarksTab })));
 
 const About = lazy(() => import('./pages/About').then(m => ({ default: m.About })));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
@@ -88,13 +87,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       <main className="flex-1 w-full mt-8">
         <div className="max-w-6xl mx-auto p-6">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div 
               key={location.pathname}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.15 }}
               className="space-y-6"
             >
               <Suspense fallback={

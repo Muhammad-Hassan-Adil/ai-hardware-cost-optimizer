@@ -23,7 +23,7 @@ export const PowerCostCalculator: React.FC = () => {
   const { data: dbGpus = [] } = useQuery({
     queryKey: ['gpus'],
     queryFn: () => api.getGPUs(),
-    enabled: typeof window !== 'undefined'
+    enabled: true
   });
 
   const getTdpForVram = (vram: number) => {
