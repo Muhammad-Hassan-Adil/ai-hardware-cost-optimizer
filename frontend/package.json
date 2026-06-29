@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:ssg": "tsc -b && vite-react-ssg build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -40,7 +39,6 @@
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.1",
     "typescript": "~6.0.2",
-    "vite": "^8.1.0",
-    "vite-react-ssg": "^0.9.1-beta.1"
+    "vite": "^8.1.0"
   }
 }

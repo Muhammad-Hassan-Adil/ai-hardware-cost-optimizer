@@ -1,7 +1,10 @@
-import './index.css'
-import App from './App.tsx'
-import { HelmetProvider } from 'react-helmet-async';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter } from 'react-router-dom';
+import './index.css';
+import App from './App';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,19 +15,14 @@ const queryClient = new QueryClient({
   },
 });
 
-import { ViteReactSSG } from 'vite-react-ssg'
-
-export const createRoot = ViteReactSSG({
-  routes: [
-    {
-      path: '*',
-      element: (
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <App />
-          </HelmetProvider>
-        </QueryClientProvider>
-      )
-    }
-  ]
-})
+createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </HelmetProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
+);

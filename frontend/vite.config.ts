@@ -1,15 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { routesToPrerender } from './src/routes.ts'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  ssgOptions: {
-    includedRoutes: () => routesToPrerender,
-    dirStyle: 'nested'
-  },
   build: {
     rollupOptions: {
       output: {
