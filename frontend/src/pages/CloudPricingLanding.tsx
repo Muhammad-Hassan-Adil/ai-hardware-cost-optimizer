@@ -81,7 +81,7 @@ export const CloudPricingLanding: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             onClick={f.active ? f.action : undefined}
-            className={`p-6 rounded-2xl border ${f.active ? 'bg-white dark:bg-surface-800 border-slate-200 dark:border-surface-700 hover:border-emerald-500 hover:shadow-lg cursor-pointer' : 'bg-slate-50 dark:bg-surface-900 border-slate-100 dark:border-surface-800 opacity-60'} transition-all relative flex flex-col`}
+            className={`p-6 rounded-2xl border ${f.active ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:shadow-lg cursor-pointer' : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800 opacity-60'} transition-all relative flex flex-col`}
           >
             <div className="mb-4">{f.icon}</div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{f.title}</h3>

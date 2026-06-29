@@ -68,7 +68,7 @@ export const ModelComparison: React.FC = () => {
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
                 disabled={selectedIds.length >= 5}
-                className="flex items-center gap-2 px-3 py-1.5 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 rounded-md text-sm font-medium hover:bg-brand-100 dark:hover:bg-brand-900/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 rounded-md text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Plus size={16} /> Add Model <ChevronDown size={14} />
               </button>
@@ -163,10 +163,10 @@ export const ModelComparison: React.FC = () => {
                     </td>
                   ))}
                 </tr>
-                <tr className="text-sm font-bold bg-brand-50/50 dark:bg-brand-900/10">
+                <tr className="text-sm font-bold bg-blue-50/50 dark:bg-blue-900/10">
                   <td className="py-4 px-4 text-slate-900 dark:text-white bg-slate-50/50 dark:bg-slate-900/20">Total Cost</td>
                   {calculatedCosts.map(m => (
-                    <td key={m.id} className={`py-4 px-4 text-lg font-mono ${m.totalCost === minCost ? 'text-brand-600 dark:text-brand-400' : 'text-slate-900 dark:text-slate-200'}`}>
+                    <td key={m.id} className={`py-4 px-4 text-lg font-mono ${m.totalCost === minCost ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-slate-200'}`}>
                       ${m.totalCost < 0.0001 ? '<0.0001' : m.totalCost.toFixed(4)}
                     </td>
                   ))}

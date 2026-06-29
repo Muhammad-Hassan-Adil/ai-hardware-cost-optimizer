@@ -183,7 +183,7 @@ export const BottleneckFinder: React.FC = () => {
             <select
               value={request.bitsPerWeight}
               onChange={(e) => setRequest({ ...request, bitsPerWeight: Number(e.target.value) })}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={2}>2-bit (Extreme)</option>
               <option value={4}>4-bit (Recommended)</option>
@@ -225,7 +225,7 @@ export const BottleneckFinder: React.FC = () => {
           <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-700">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Recommended Upgrade</p>
             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 border border-slate-100 dark:border-slate-700">
-              <p className="font-semibold text-brand-600 dark:text-brand-400 mb-2">
+              <p className="font-semibold text-blue-600 dark:text-blue-400 mb-2">
                 → {upgrade?.action}
               </p>
               <ul className="text-sm space-y-1 text-slate-600 dark:text-slate-300">

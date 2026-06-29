@@ -106,7 +106,7 @@ export const Navbar: React.FC = () => {
           className="flex-shrink-0 cursor-pointer"
           onClick={() => { navigate('/'); }}
         >
-          <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-brand-500 transition-colors flex items-center gap-2">
+          <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white hover:text-blue-500 transition-colors flex items-center gap-2">
             <span className="text-xl">⚡</span> GPURunner
           </h1>
         </div>
@@ -126,14 +126,14 @@ export const Navbar: React.FC = () => {
                 >
                   <button 
                     onClick={() => handleTabClick(key)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-1 ${isActive ? 'text-brand-500' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}`}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-1 ${isActive ? 'text-blue-500' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}`}
                   >
                     {tabInfo.title}
                     <ChevronDown size={14} className={`transition-transform duration-200 ${isHovered ? 'rotate-180' : ''}`} />
                     {isActive && (
                       <motion.div 
                         layoutId="activeTabIndicator"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-500 rounded-t-md" 
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500 rounded-t-md" 
                       />
                     )}
                   </button>
@@ -145,9 +145,9 @@ export const Navbar: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-surface-800 border border-slate-200 dark:border-surface-700 rounded-xl shadow-xl overflow-hidden z-50"
+                        className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden z-50"
                       >
-                        <div className="p-4 bg-slate-50 dark:bg-surface-900 border-b border-slate-100 dark:border-surface-700">
+                        <div className="p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-700">
                           <p className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                             {tabInfo.items[0].icon} {tabInfo.title}
                           </p>
@@ -157,9 +157,9 @@ export const Navbar: React.FC = () => {
                             <button
                               key={idx}
                               onClick={() => handleItemClick(item.href)}
-                              className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-surface-700 cursor-pointer"
+                              className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
                             >
-                              <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">
+                              <span className="flex items-center gap-2 text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">
                                 <span>{item.icon}</span>
                                 {item.label}
                               </span>
@@ -179,13 +179,13 @@ export const Navbar: React.FC = () => {
                 onClick={() => {
                   navigate('/benchmarks');
                 }}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-1 ${location.pathname.startsWith('/benchmarks') ? 'text-brand-500' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-1 ${location.pathname.startsWith('/benchmarks') ? 'text-blue-500' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}`}
               >
                 Benchmarks
                 {location.pathname.startsWith('/benchmarks') && (
                   <motion.div 
                     layoutId="activeTabIndicator"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-500 rounded-t-md" 
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500 rounded-t-md" 
                   />
                 )}
               </button>
@@ -215,7 +215,7 @@ export const Navbar: React.FC = () => {
 
           <button
             onClick={() => setIsDark(!isDark)}
-            className="p-2 rounded-full bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-surface-700 transition-colors flex-shrink-0"
+            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex-shrink-0"
             aria-label="Toggle Dark Mode"
           >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}

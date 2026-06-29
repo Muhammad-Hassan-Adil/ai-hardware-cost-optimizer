@@ -15,7 +15,7 @@ export const HardwareAnalyzerLanding: React.FC = () => {
     {
       title: 'Analyze Compatibility',
       desc: 'Check if your local setup has enough VRAM for that new LLaMA model.',
-      icon: <Search className="text-brand-500" size={24} />,
+      icon: <Search className="text-blue-500" size={24} />,
       active: true,
       action: () => handleLaunch()
     },
@@ -51,8 +51,8 @@ export const HardwareAnalyzerLanding: React.FC = () => {
         })}</script>
       </Helmet>
       <div className="text-center space-y-6">
-        <div className="w-20 h-20 bg-brand-50 dark:bg-brand-500/10 rounded-2xl flex items-center justify-center mx-auto">
-          <Cpu className="text-brand-600 dark:text-brand-400" size={40} />
+        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto">
+          <Cpu className="text-blue-600 dark:text-blue-400" size={40} />
         </div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white">Hardware Analyzer</h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
@@ -60,7 +60,7 @@ export const HardwareAnalyzerLanding: React.FC = () => {
         </p>
         <button 
           onClick={() => handleLaunch()}
-          className="px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg shadow-brand-500/25 transition-all"
+          className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 transition-all"
         >
           Launch Tool
         </button>
@@ -73,7 +73,7 @@ export const HardwareAnalyzerLanding: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={f.active ? f.action : undefined}
-            className={`p-6 rounded-2xl border ${f.active ? 'bg-white dark:bg-surface-800 border-slate-200 dark:border-surface-700 hover:border-brand-500 hover:shadow-lg cursor-pointer' : 'bg-slate-50 dark:bg-surface-900 border-slate-100 dark:border-surface-800 opacity-60'} transition-all relative`}
+            className={`p-6 rounded-2xl border ${f.active ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:shadow-lg cursor-pointer' : 'bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800 opacity-60'} transition-all relative`}
           >
             <div className="mb-4">{f.icon}</div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{f.title}</h3>

@@ -100,7 +100,7 @@ export const PowerCostCalculator: React.FC = () => {
             
             <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
               <span className="font-semibold text-slate-900 dark:text-white">Total Est. TDP</span>
-              <span className="font-bold text-lg text-brand-600 dark:text-brand-400">{totalPower}W</span>
+              <span className="font-bold text-lg text-blue-600 dark:text-blue-400">{totalPower}W</span>
             </div>
           </div>
 
@@ -168,7 +168,7 @@ export const PowerCostCalculator: React.FC = () => {
               </div>
               <div className="flex justify-between items-end">
                 <span className="text-slate-600 dark:text-slate-400">Per year</span>
-                <span className="text-2xl font-bold text-brand-600 dark:text-brand-400">${costPerYear.toFixed(0)}</span>
+                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">${costPerYear.toFixed(0)}</span>
               </div>
             </div>
           </div>

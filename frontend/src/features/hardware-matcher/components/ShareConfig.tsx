@@ -78,7 +78,7 @@ export const ShareConfig: React.FC = () => {
 
             <button
               onClick={handleCopy}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
             >
               {copied ? <Check size={18} /> : <Copy size={18} />}
               {copied ? 'Copied to Clipboard!' : 'Copy Share Link'}

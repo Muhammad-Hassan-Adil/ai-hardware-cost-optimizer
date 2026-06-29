@@ -120,7 +120,7 @@ export const UpgradePlanner: React.FC = () => {
               type="number"
               value={budget}
               onChange={(e) => setBudget(Number(e.target.value))}
-              className="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none"
+              className="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
           {budgetType === 'monthly' && (
@@ -136,7 +136,7 @@ export const UpgradePlanner: React.FC = () => {
           <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-500 mb-3">1</div>
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Now ($0)</p>
           <p className="font-semibold text-slate-800 dark:text-slate-200 mb-1">Current ({currentVram}GB)</p>
-          <p className="text-sm text-brand-600 dark:text-brand-400 font-medium">Runs: {currentParams > 0 ? `${currentParams}B @ 4-bit` : 'Too small'}</p>
+          <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Runs: {currentParams > 0 ? `${currentParams}B @ 4-bit` : 'Too small'}</p>
           <p className="text-xs text-slate-500 mt-1">Speed: {currentParams > 0 ? `${currentSpeed} tok/s` : 'N/A'}</p>
           
           <ArrowRight className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-700 z-10" />
@@ -149,7 +149,7 @@ export const UpgradePlanner: React.FC = () => {
             <>
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Next (~${roadmap.step2.cost})</p>
               <p className="font-semibold text-slate-800 dark:text-slate-200 mb-1">Add: {roadmap.step2.name}</p>
-              <p className="text-sm text-brand-600 dark:text-brand-400 font-medium">Runs: {calculateMaxParams(roadmap.step2.vram)}B @ 4-bit</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Runs: {calculateMaxParams(roadmap.step2.vram)}B @ 4-bit</p>
               <p className="text-xs text-slate-500 mt-1">Speed: {getSpeedForParams(roadmap.step2.vram, roadmap.step2.bw, calculateMaxParams(roadmap.step2.vram))} tok/s</p>
             </>
           ) : (
@@ -168,7 +168,7 @@ export const UpgradePlanner: React.FC = () => {
             <>
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Future (~${roadmap.step3.cost})</p>
               <p className="font-semibold text-slate-800 dark:text-slate-200 mb-1">Replace: {roadmap.step3.name}</p>
-              <p className="text-sm text-brand-600 dark:text-brand-400 font-medium">Runs: {calculateMaxParams(roadmap.step3.vram)}B @ 4-bit</p>
+              <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Runs: {calculateMaxParams(roadmap.step3.vram)}B @ 4-bit</p>
               <p className="text-xs text-slate-500 mt-1">Speed: {getSpeedForParams(roadmap.step3.vram, roadmap.step3.bw, calculateMaxParams(roadmap.step3.vram))} tok/s</p>
             </>
           ) : (

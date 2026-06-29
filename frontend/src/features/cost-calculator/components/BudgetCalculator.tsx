@@ -57,7 +57,7 @@ export const BudgetCalculator: React.FC = () => {
                 min="1"
                 value={budget}
                 onChange={(e) => setBudget(Math.max(1, Number(e.target.value)))}
-                className="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none"
+                className="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
           </div>
@@ -84,7 +84,7 @@ export const BudgetCalculator: React.FC = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {topModels.map(m => (
-            <div key={m.id} className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-slate-800 flex items-center justify-between group hover:border-brand-300 dark:hover:border-brand-700 transition-colors">
+            <div key={m.id} className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-slate-800 flex items-center justify-between group hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
               <div className="overflow-hidden pr-2">
                 <p className="font-semibold text-slate-900 dark:text-white truncate" title={m.friendly_name}>
                   {m.friendly_name}
@@ -94,7 +94,7 @@ export const BudgetCalculator: React.FC = () => {
                 </p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-lg font-bold text-brand-600 dark:text-brand-400">
+                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
                   {formatNumber(m.requests)}
                 </p>
                 <p className="text-xs text-slate-400 uppercase tracking-wider">Requests</p>

@@ -109,7 +109,7 @@ export const InferenceSpeedEstimator: React.FC = () => {
                     </td>
                     <td className="py-4 w-1/3">
                       <div className="flex items-center gap-2">
-                        <div className="h-4 bg-brand-500 rounded-sm" style={{ width: `${Math.max(1, speedPct)}%` }}></div>
+                        <div className="h-4 bg-blue-500 rounded-sm" style={{ width: `${Math.max(1, speedPct)}%` }}></div>
                         <span className="font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">
                           {result.estimatedTokensPerSecond > 0 ? Math.round(result.estimatedTokensPerSecond) : 0}
                         </span>

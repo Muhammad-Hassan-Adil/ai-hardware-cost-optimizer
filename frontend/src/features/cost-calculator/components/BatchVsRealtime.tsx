@@ -100,10 +100,10 @@ export const BatchVsRealtime: React.FC = () => {
               <p className="text-sm text-slate-500">per month</p>
             </div>
 
-            <div className="bg-brand-50 dark:bg-brand-900/10 rounded-xl p-6 border border-brand-200 dark:border-brand-800/50 flex flex-col items-center text-center">
-              <Clock className="text-brand-500 mb-3" size={24} />
+            <div className="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-6 border border-blue-200 dark:border-blue-800/50 flex flex-col items-center text-center">
+              <Clock className="text-blue-500 mb-3" size={24} />
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Batch API (50% off)</p>
-              <p className="text-3xl font-bold text-brand-600 dark:text-brand-400 mb-2">
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                 ${costs.batchMonthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
               <p className="text-sm text-slate-500">per month</p>

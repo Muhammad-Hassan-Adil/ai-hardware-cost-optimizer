@@ -7,22 +7,7 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      colors: {
-        brand: {
-          50:  '#f0f4ff',
-          100: '#e0e9ff',
-          400: '#6b8cff',
-          500: '#4f6ef7',
-          600: '#3a55e8',
-          700: '#2d43c7',
-        },
-        surface: {
-          900: '#0a0e1a',
-          800: '#0f1629',
-          700: '#151e36',
-          600: '#1c2847',
-        }
-      },
+
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
